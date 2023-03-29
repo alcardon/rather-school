@@ -7,11 +7,13 @@ import * as Yup from "yup";
 import Link from "next/link";
 
 import { useSupabase } from "@/components/auth/supabaseProvider";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const { supabase } = useSupabase();
+  const router = useRouter();
 
   const handleGitHubLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -48,7 +50,8 @@ export default function Page() {
 
     // Handle form submission
     onSubmit: async ({ email, password }) => {
-      signIn(email, password);
+      await signIn(email, password);
+      router.push("/dashboard");
     },
   });
   const { errors, touched, values, handleChange, handleSubmit } = formik;

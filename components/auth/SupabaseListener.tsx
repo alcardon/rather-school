@@ -19,6 +19,14 @@ export default function SupabaseListener({
       if (session?.access_token !== serverAccessToken) {
         router.refresh();
       }
+
+      if (!session) {
+        router.push("/login");
+      }
+
+      if (session) {
+        router.push("/dashboard");
+      }
     });
 
     return () => {
