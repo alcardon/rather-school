@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import cn from "classnames";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
-import { useAuth, VIEWS } from "@/components/auth/AuthProvider";
-import { useSupabase } from "@/components/auth/SupabaseProvider";
+import { useSupabase } from "@/components/auth/supabaseProvider";
 import Link from "next/link";
 
 export default function Page() {
-  const { setView } = useAuth();
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const { supabase } = useSupabase();
@@ -64,16 +60,16 @@ export default function Page() {
       <div className="container mx-auto h-full px-4">
         <div className="flex h-full content-center items-center justify-center">
           <div className="w-full px-4 lg:w-6/12">
-            <div className="bg-blueGray-200 relative mb-6 flex w-full min-w-0 flex-col break-words rounded-lg border-0 shadow-lg">
+            <div className="relative mb-6 flex w-full min-w-0 flex-col break-words rounded-lg border-0 bg-blueGray-200 shadow-lg">
               <div className="mb-0 rounded-t px-6 py-6">
                 <div className="mb-3 text-center">
-                  <h6 className="text-blueGray-500 text-sm font-bold">
+                  <h6 className="text-sm font-bold text-blueGray-500">
                     Sign up with
                   </h6>
                 </div>
                 <div className="btn-wrapper text-center">
                   <button
-                    className="active:bg-blueGray-50 text-blueGray-700 mb-1 mr-2 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-normal font-bold uppercase shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none"
+                    className="mb-1 mr-2 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-normal font-bold uppercase text-blueGray-700 shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none active:bg-blueGray-50"
                     type="button"
                     onClick={handleGitHubLogin}
                   >
@@ -81,17 +77,17 @@ export default function Page() {
                     Github
                   </button>
                   <button
-                    className="active:bg-blueGray-50 text-blueGray-700 mb-1 mr-1 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-normal font-bold uppercase shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none"
+                    className="mb-1 mr-1 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-normal font-bold uppercase text-blueGray-700 shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none active:bg-blueGray-50"
                     type="button"
                   >
                     <img alt="..." className="mr-1 w-5" src="/img/google.svg" />
                     Google
                   </button>
                 </div>
-                <hr className="border-b-1 border-blueGray-300 mt-6" />
+                <hr className="border-b-1 mt-6 border-blueGray-300" />
               </div>
               <div className="flex-auto px-4 py-10 pt-0 lg:px-10">
-                <div className="text-blueGray-400 mb-3 text-center font-bold">
+                <div className="mb-3 text-center font-bold text-blueGray-400">
                   <small>Or sign up with credentials</small>
                 </div>
 
@@ -99,13 +95,13 @@ export default function Page() {
                   {" "}
                   <div className="relative mb-3 w-full">
                     <label
-                      className="text-blueGray-600 mb-2 block text-xs font-bold uppercase"
+                      className="mb-2 block text-xs font-bold uppercase text-blueGray-600"
                       htmlFor="grid-password"
                     >
                       Email
                     </label>
                     <input
-                      className="placeholder-blueGray-300 text-blueGray-600 w-full rounded border-0 bg-white px-3 py-3 text-sm shadow transition-all duration-150 ease-linear focus:outline-none focus:ring"
+                      className="w-full rounded border-0 bg-white px-3 py-3 text-sm text-blueGray-600 placeholder-blueGray-300 shadow transition-all duration-150 ease-linear focus:outline-none focus:ring"
                       id="email"
                       name="email"
                       placeholder="Email"
@@ -119,13 +115,13 @@ export default function Page() {
                   </div>{" "}
                   <div className="relative mb-3 w-full">
                     <label
-                      className="text-blueGray-600 mb-2 block text-xs font-bold uppercase"
+                      className="mb-2 block text-xs font-bold uppercase text-blueGray-600"
                       htmlFor="grid-password"
                     >
                       Password
                     </label>
                     <input
-                      className="placeholder-blueGray-300 text-blueGray-600 w-full rounded border-0 bg-white px-3 py-3 text-sm shadow transition-all duration-150 ease-linear focus:outline-none focus:ring"
+                      className="w-full rounded border-0 bg-white px-3 py-3 text-sm text-blueGray-600 placeholder-blueGray-300 shadow transition-all duration-150 ease-linear focus:outline-none focus:ring"
                       id="password"
                       name="password"
                       type="password"
@@ -142,9 +138,9 @@ export default function Page() {
                       <input
                         id="customCheckLogin"
                         type="checkbox"
-                        className="text-blueGray-700 form-checkbox ml-1 h-5 w-5 rounded border-0 transition-all duration-150 ease-linear"
+                        className="form-checkbox ml-1 h-5 w-5 rounded border-0 text-blueGray-700 transition-all duration-150 ease-linear"
                       />
-                      <span className="text-blueGray-600 ml-2 text-sm font-semibold">
+                      <span className="ml-2 text-sm font-semibold text-blueGray-600">
                         I agree with the{" "}
                         <a
                           href="#none"
@@ -158,18 +154,28 @@ export default function Page() {
                   </div>
                   <div className="mt-6 text-center">
                     <button
-                      className="bg-blueGray-800 active:bg-blueGray-600 mb-1 mr-1 w-full rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none"
+                      className="mb-1 mr-1 w-full rounded bg-blueGray-800 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-blueGray-600"
                       type="submit"
                     >
                       Create Account
                     </button>
                   </div>
+                  {errorMsg != "" && successMsg === "" && (
+                    <div>
+                      <small>{errorMsg}</small>
+                    </div>
+                  )}
+                  {successMsg != "" && (
+                    <div>
+                      <small>{successMsg}</small>
+                    </div>
+                  )}
                 </form>
               </div>
             </div>
             <div className="relative mt-6 flex flex-wrap">
               <div className="w-1/2">
-                <Link href="/auth/login" className="text-blueGray-200">
+                <Link href="/login" className="text-blueGray-200">
                   <small>Already registered?</small>
                 </Link>
               </div>

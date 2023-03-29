@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuth, VIEWS } from "@/components/auth/AuthProvider";
-import { useSupabase } from "@/components/auth/SupabaseProvider";
+import { useAuth, VIEWS } from "@/components/auth/authProvider";
+import { useSupabase } from "@/components/auth/supabaseProvider";
 import {
   Button,
   Flex,

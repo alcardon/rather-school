@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useSupabase } from "./SupabaseProvider";
+import { useSupabase } from "./supabaseProvider";
 
 export default function SupabaseListener({
   serverAccessToken,

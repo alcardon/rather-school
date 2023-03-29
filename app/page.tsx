@@ -1,5 +1,9 @@
 // app/page.js
-// This file maps to the index route (/)
+"use Client";
+
+import { useSupabase } from "@/components/auth/supabaseProvider";
+import { useRouter } from "next/navigation";
+
 export default function Page() {
-  return <h1>Hello, Next.js!</h1>;
+  return <></>;
 }

@@ -5,7 +5,7 @@ import cn from "classnames";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
-import { useSupabase } from "./SupabaseProvider";
+import { useSupabase } from "./supabaseProvider";
 
 const UpdatePasswordSchema = Yup.object().shape({
   password: Yup.string().required("Required"),
