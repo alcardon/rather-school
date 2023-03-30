@@ -1,6 +1,6 @@
 "use client";
 
-import { useSupabase } from "@/components/auth/supabaseProvider";
+import { useSupabase } from "@/components/auth/supabase-provider";
 import { useEffect, useState } from "react";
 
 import type { Database } from "@/lib/database.types";

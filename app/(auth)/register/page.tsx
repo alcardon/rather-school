@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useSupabase } from "@/components/auth/supabaseProvider";
+import { useSupabase } from "@/components/auth/supabase-provider";
 import Link from "next/link";
 
 export default function Page() {

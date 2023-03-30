@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
 
-import { useSupabase } from "@/components/auth/supabaseProvider";
+import { useSupabase } from "@/components/auth/supabase-provider";
 import { useRouter } from "next/navigation";
 
 export default function Page() {

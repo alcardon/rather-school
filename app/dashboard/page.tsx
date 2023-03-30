@@ -1,6 +1,6 @@
 "use client";
 
-import { useSupabase } from "@/components/auth/supabaseProvider";
+import { useSupabase } from "@/components/auth/supabase-provider";
 import CardTable from "@/components/dashboard/common/cardTable";
 
 export default function Page() {
