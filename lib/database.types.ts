@@ -9,6 +9,58 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      courses: {
+        Row: {
+          active: boolean;
+          course_id: number;
+          created_at: string;
+          max_students: number;
+          min_students: number;
+          schedule: string;
+          subject: string;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          course_id?: number;
+          created_at?: string;
+          max_students: number;
+          min_students: number;
+          schedule: string;
+          subject: string;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          course_id?: number;
+          created_at?: string;
+          max_students?: number;
+          min_students?: number;
+          schedule?: string;
+          subject?: string;
+          updated_at?: string;
+        };
+      };
+      enrollments: {
+        Row: {
+          course_id: number | null;
+          enrollment_date: string | null;
+          enrollment_id: number;
+          student_id: number | null;
+        };
+        Insert: {
+          course_id?: number | null;
+          enrollment_date?: string | null;
+          enrollment_id: number;
+          student_id?: number | null;
+        };
+        Update: {
+          course_id?: number | null;
+          enrollment_date?: string | null;
+          enrollment_id?: number;
+          student_id?: number | null;
+        };
+      };
       profiles: {
         Row: {
           avatar_url: string | null;
@@ -33,38 +85,6 @@ export interface Database {
           updated_at?: string | null;
           username?: string | null;
           website?: string | null;
-        };
-      };
-      rooms: {
-        Row: {
-          active: boolean;
-          created_at: string;
-          id: number;
-          max_students: number;
-          min_students: number;
-          schedule: string;
-          subject: string;
-          updated_at: string;
-        };
-        Insert: {
-          active?: boolean;
-          created_at?: string;
-          id?: number;
-          max_students: number;
-          min_students: number;
-          schedule: string;
-          subject: string;
-          updated_at?: string;
-        };
-        Update: {
-          active?: boolean;
-          created_at?: string;
-          id?: number;
-          max_students?: number;
-          min_students?: number;
-          schedule?: string;
-          subject?: string;
-          updated_at?: string;
         };
       };
       sibling_relationships: {

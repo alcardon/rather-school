@@ -3,9 +3,12 @@ import { createClient } from "@/lib/supabase-browser";
 import type { Database } from "@/lib/database.types";
 import type { SupabaseClient } from "@supabase/auth-helpers-nextjs";
 export type TypedSupabaseClient = SupabaseClient<Database>;
-import { AuthProvider } from "@/components/auth/authProvider";
 import SupabaseListener from "@/components/auth/supabaseListener";
 import SupabaseProvider from "@/components/auth/supabaseProvider";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "styles/tailwind.css";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 // do not cache this layout
 export const revalidate = 0;
@@ -27,9 +30,7 @@ export default async function RootLayout({
       <body>
         <SupabaseProvider>
           <SupabaseListener serverAccessToken={session?.access_token} />
-          <AuthProvider accessToken={session?.access_token}>
-            {children}
-          </AuthProvider>
+          {children}
         </SupabaseProvider>
       </body>
     </html>
