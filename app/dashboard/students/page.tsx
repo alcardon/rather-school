@@ -2,7 +2,6 @@ import "server-only";
 
 import { createServerClient } from "@/lib/supabase-server";
 import RealtimeStudents from "./realtime-students";
-import CardTable from "@/components/dashboard/common/cardTable";
 
 // do not cache this page
 export const revalidate = 0;
