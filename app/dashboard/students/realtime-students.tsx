@@ -4,10 +4,7 @@ import { useSupabase } from "@/components/auth/supabase-provider";
 import { useEffect, useState } from "react";
 
 import type { Database } from "@/lib/database.types";
-import CardTable from "@/components/dashboard/common/cardTable";
-import StudentsTable from "@/components/dashboard/students/studentsTable";
-import { light } from "@mui/material/styles/createPalette";
-import TestTable from "@/components/dashboard/students/testTable";
+import StudentTable from "@/components/dashboard/students/studentTable";
 
 type Student = Database["public"]["Tables"]["students"]["Row"];
 
@@ -50,7 +47,7 @@ export default function RealtimeStudents({
       <div className="mt-4 flex flex-wrap">
         <div className="mb-12 w-full px-4">
           {/* <StudentsTable data={[]} color={"light"} /> */}
-          <TestTable color="light" data={students} />
+          <StudentTable color="light" data={students} />
           {/*  <pre>{JSON.stringify(student, null, 2)}</pre> */}
         </div>
       </div>

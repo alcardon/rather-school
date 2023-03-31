@@ -12,6 +12,8 @@ export interface Database {
       courses: {
         Row: {
           active: boolean;
+          code: string | null;
+          course_avatar_url: string | null;
           course_id: number;
           created_at: string;
           max_students: number;
@@ -22,6 +24,8 @@ export interface Database {
         };
         Insert: {
           active?: boolean;
+          code?: string | null;
+          course_avatar_url?: string | null;
           course_id?: number;
           created_at?: string;
           max_students: number;
@@ -32,6 +36,8 @@ export interface Database {
         };
         Update: {
           active?: boolean;
+          code?: string | null;
+          course_avatar_url?: string | null;
           course_id?: number;
           created_at?: string;
           max_students?: number;
@@ -104,46 +110,49 @@ export interface Database {
       students: {
         Row: {
           created_at: string | null;
+          current_residence_country: string | null;
           date_of_birth: string | null;
           email_address: string | null;
-          emergency_contact_name: string | null;
-          emergency_contact_number: number | null;
           first_name: string | null;
           gender: string | null;
-          grade_level: number | null;
           home_address: string | null;
           last_name: string | null;
           phone_number: number | null;
+          preferred_lang: string | null;
+          status: string | null;
+          student_avatar_url: string | null;
           student_id: number;
           updated_at: string | null;
         };
         Insert: {
           created_at?: string | null;
+          current_residence_country?: string | null;
           date_of_birth?: string | null;
           email_address?: string | null;
-          emergency_contact_name?: string | null;
-          emergency_contact_number?: number | null;
           first_name?: string | null;
           gender?: string | null;
-          grade_level?: number | null;
           home_address?: string | null;
           last_name?: string | null;
           phone_number?: number | null;
+          preferred_lang?: string | null;
+          status?: string | null;
+          student_avatar_url?: string | null;
           student_id?: number;
           updated_at?: string | null;
         };
         Update: {
           created_at?: string | null;
+          current_residence_country?: string | null;
           date_of_birth?: string | null;
           email_address?: string | null;
-          emergency_contact_name?: string | null;
-          emergency_contact_number?: number | null;
           first_name?: string | null;
           gender?: string | null;
-          grade_level?: number | null;
           home_address?: string | null;
           last_name?: string | null;
           phone_number?: number | null;
+          preferred_lang?: string | null;
+          status?: string | null;
+          student_avatar_url?: string | null;
           student_id?: number;
           updated_at?: string | null;
         };
