@@ -72,19 +72,6 @@ export default function Sidebar() {
                 </div>
               </div>
             </div>
-            {/* Form */}
-            <form className="mt-6 mb-4 md:hidden">
-              <div className="mb-3 pt-0">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="h-12 w-full rounded border border-0 border-solid border-blueGray-500 bg-white px-3 py-2 text-base font-normal leading-snug text-blueGray-600 placeholder-blueGray-300 shadow-none outline-none focus:outline-none"
-                />
-              </div>
-            </form>
-
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
 
             {/* Navigation */}
 

@@ -4,6 +4,16 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "robohash.org",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if
