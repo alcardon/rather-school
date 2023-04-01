@@ -18,6 +18,7 @@ import {
   FilterFns,
 } from "@tanstack/react-table";
 
+import { useRouter } from "next/navigation";
 import { useReducer, useState, useEffect, useMemo } from "react";
 
 import {
@@ -44,6 +45,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/solid";
+import Link from "next/link";
 
 type Student = Database["public"]["Tables"]["students"]["Row"];
 interface CardTableProps {
@@ -76,9 +78,16 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 export default function StudentTable({ data, color }: CardTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const router = useRouter();
 
   const columns = useMemo<ColumnDef<Student, any>[]>(
     () => [
+      {
+        accessorKey: "student_id",
+        id: "student_id",
+        header: () => "",
+        footer: (props) => props.column.id,
+      },
       {
         accessorKey: "student_avatar_url",
         id: "student_avatar_url",
@@ -136,7 +145,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
       globalFilter,
     },
     initialState: {
-      columnVisibility: { student_avatar_url: false },
+      columnVisibility: { student_avatar_url: false, student_id: false },
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
@@ -251,10 +260,19 @@ export default function StudentTable({ data, color }: CardTableProps) {
                 </tr>
               ))}
             </thead>
+
             <tbody>
               {table.getRowModel().rows.map((row) => {
                 return (
-                  <tr key={row.id}>
+                  <tr
+                    key={row.id}
+                    onClick={() =>
+                      router.push(
+                        `/dashboard/students/${row.getValue("student_id")}`
+                      )
+                    }
+                    className={"cursor-pointer hover:bg-sky-100"}
+                  >
                     {row.getVisibleCells().map((cell) => {
                       return (
                         <>
@@ -263,7 +281,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                               <Image
                                 src={`${cell.row.getValue(
                                   "student_avatar_url"
-                                )}/?size=200x200`}
+                                )}/?size=100x100`}
                                 alt={"avatar Img"}
                                 height={60}
                                 width={60}
@@ -308,26 +326,37 @@ export default function StudentTable({ data, color }: CardTableProps) {
             </tbody>
           </table>
 
-          <div className="flex items-center justify-between py-3">
+          {/*   pagination */}
+
+          <div className="justify-betweenrounded-t flex items-center border-0 px-8 py-3">
             <div className="flex flex-1 justify-between sm:hidden">
-              <Button
-                className="rounded border p-1"
+              <PageButton
+                className=""
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
-                Previous
-              </Button>
-              <Button
-                className="rounded border p-1"
-                onClick={() => table.previousPage()}
+                <span className="sr-only">Previous</span>
+                <ChevronLeftIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              </PageButton>
+
+              <PageButton
+                className=""
+                onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
-                Next
-              </Button>
+                <span className="sr-only">Next</span>
+                <ChevronRightIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              </PageButton>
             </div>
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
               {" "}
-              <div className="flex items-baseline gap-x-2">
+              <div className="flex items-baseline gap-x-2 space-x-2 text-xs">
                 <span className="text-sm text-gray-700">
                   Page{" "}
                   <span className="font-medium">
@@ -344,9 +373,9 @@ export default function StudentTable({ data, color }: CardTableProps) {
                       table.setPageSize(Number(e.target.value));
                     }}
                   >
-                    {[5, 10, 20].map((pageSize) => (
+                    {[10, 20, 30].map((pageSize) => (
                       <option key={pageSize} value={pageSize}>
-                        Show {pageSize}
+                        {pageSize}
                       </option>
                     ))}
                   </select>
@@ -369,7 +398,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                     />
                   </PageButton>
                   <PageButton
-                    className="rounded-l-md"
+                    className=""
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -380,7 +409,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                     />
                   </PageButton>
                   <PageButton
-                    className="rounded-l-md"
+                    className=""
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                   >
@@ -406,7 +435,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
             </div>
           </div>
 
-          <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
+          {/*   <div>{table.getPrePaginationRowModel().rows.length} Rows</div> */}
         </div>
       </div>
 

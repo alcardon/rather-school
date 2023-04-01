@@ -9,8 +9,8 @@ import StudentTable from "@/components/dashboard/students/studentTable";
 type Student = Database["public"]["Tables"]["students"]["Row"];
 
 // realtime subscriptions need to be set up client-side
-// this component takes initial posts as props and automatically
-// updates when new posts are inserted into Supabase's `posts` table
+// this component takes initial students as props and automatically
+// updates when new students are inserted into Supabase's `students` table
 export default function RealtimeStudents({
   serverStudents,
 }: {
@@ -20,14 +20,14 @@ export default function RealtimeStudents({
   const { supabase } = useSupabase();
 
   useEffect(() => {
-    // this overwrites `posts` any time the `serverPosts` prop changes
+    // this overwrites `students` any time the `serverStudents` prop changes
     // this happens when the parent Server Component is re-rendered
     setStudents(serverStudents);
   }, [serverStudents]);
 
   useEffect(() => {
-    // ensure you have enabled replication on the `posts` table
-    // https://app.supabase.com/project/_/database/replication
+    // ensure you have enabled replication on the `students` table
+
     const channel = supabase
       .channel("*")
       .on(
@@ -46,9 +46,7 @@ export default function RealtimeStudents({
     <>
       <div className="mt-4 flex flex-wrap">
         <div className="mb-12 w-full px-4">
-          {/* <StudentsTable data={[]} color={"light"} /> */}
           <StudentTable color="light" data={students} />
-          {/*  <pre>{JSON.stringify(student, null, 2)}</pre> */}
         </div>
       </div>
     </>
