@@ -18,7 +18,6 @@ export default function Page() {
   };
 
   async function signUp(email: string, password: string) {
-    console.log("entra");
     const { error, data } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -26,7 +25,6 @@ export default function Page() {
 
     if (error) {
       setErrorMsg(error.message);
-      console.log(error.message);
     } else {
       setSuccessMsg(
         "Success! Please check your email for further instructions."

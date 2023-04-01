@@ -144,11 +144,11 @@ export default function Page() {
                       <small>{errorMsg}</small>
                     </div>
                   )}
-                  {successMsg != "" && (
+                  {/*  {successMsg != "" && (
                     <div>
                       <small>{successMsg}</small>
                     </div>
-                  )}
+                  )} */}
                 </form>
               </div>
             </div>

@@ -23,10 +23,7 @@ export default function Sidebar() {
             <i className="fas fa-bars"></i>
           </button>
           {/* Brand */}
-          <Link
-            href="/"
-            className="mr-0 inline-block whitespace-nowrap p-4 px-0 text-left text-sm font-bold uppercase text-blueGray-600 md:block md:pb-2"
-          >
+          <Link href="/" className="mr-0 inline-block md:block md:pb-2">
             <Image
               src="/img/RSLogo.png"
               width={180}

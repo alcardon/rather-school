@@ -2,12 +2,14 @@
 
 import { createRef, useState } from "react";
 import { createPopper } from "@popperjs/core";
+import { useSupabase } from "@/components/auth/supabase-provider";
 
 const UserDropdown = () => {
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = useState(false);
   const btnDropdownRef = createRef();
   const popoverDropdownRef = createRef();
+  const { supabase } = useSupabase();
   const openDropdownPopover = () => {
     createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
       placement: "bottom-start",
@@ -16,6 +18,10 @@ const UserDropdown = () => {
   };
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
+  };
+
+  const SignOutUser = async () => {
+    const { error } = await supabase.auth.signOut();
   };
   return (
     <>
@@ -46,41 +52,25 @@ const UserDropdown = () => {
         }
       >
         <a
-          href="#pablo"
+          href="SignOut"
           className={
             "block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-blueGray-700"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+            SignOutUser();
+          }}
         >
-          Action
+          Sign out
         </a>
         <a
-          href="#pablo"
+          href="profile"
           className={
             "block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-blueGray-700"
           }
           onClick={(e) => e.preventDefault()}
         >
-          Another action
-        </a>
-        <a
-          href="#pablo"
-          className={
-            "block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-blueGray-700"
-          }
-          onClick={(e) => e.preventDefault()}
-        >
-          Something else here
-        </a>
-        <div className="my-2 h-0 border border-solid border-blueGray-100" />
-        <a
-          href="#pablo"
-          className={
-            "block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-blueGray-700"
-          }
-          onClick={(e) => e.preventDefault()}
-        >
-          Seprated link
+          View profile
         </a>
       </div>
     </>

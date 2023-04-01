@@ -11,10 +11,10 @@ export default function FooterAdmin() {
               <div className="py-1 text-center text-sm font-semibold text-blueGray-500 md:text-left">
                 Copyright © {new Date().getFullYear()}{" "}
                 <a
-                  href="https://www.creative-tim.com?ref=nnjs-footer-admin"
+                  href="#"
                   className="py-1 text-sm font-semibold text-blueGray-500 hover:text-blueGray-700"
                 >
-                  Creative Tim
+                  Rather School
                 </a>
               </div>
             </div>
@@ -22,15 +22,7 @@ export default function FooterAdmin() {
               <ul className="flex list-none flex-wrap justify-center md:justify-end">
                 <li>
                   <a
-                    href="https://www.creative-tim.com?ref=nnjs-footer-admin"
-                    className="block px-3 py-1 text-sm font-semibold text-blueGray-600 hover:text-blueGray-800"
-                  >
-                    Creative Tim
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.creative-tim.com/presentation?ref=nnjs-footer-admin"
+                    href="#"
                     className="block px-3 py-1 text-sm font-semibold text-blueGray-600 hover:text-blueGray-800"
                   >
                     About Us
@@ -38,7 +30,7 @@ export default function FooterAdmin() {
                 </li>
                 <li>
                   <a
-                    href="http://blog.creative-tim.com?ref=nnjs-footer-admin"
+                    href="#"
                     className="block px-3 py-1 text-sm font-semibold text-blueGray-600 hover:text-blueGray-800"
                   >
                     Blog
@@ -46,7 +38,7 @@ export default function FooterAdmin() {
                 </li>
                 <li>
                   <a
-                    href="https://github.com/creativetimofficial/notus-nextjs/blob/main/LICENSE.md?ref=nnjs-footer-admin"
+                    href="#"
                     className="block px-3 py-1 text-sm font-semibold text-blueGray-600 hover:text-blueGray-800"
                   >
                     MIT License
