@@ -8,3 +8,5 @@ export const createServerClient = () =>
     headers,
     cookies,
   });
+
+export type SupabaseType = Awaited<ReturnType<typeof createServerClient>>;

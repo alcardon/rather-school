@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import type { Database } from "@/lib/database.types";
 import StudentTable from "@/components/dashboard/students/studentTable";
 
-type Student = Database["public"]["Tables"]["students"]["Row"];
+type Students = Database["public"]["Tables"]["students"]["Row"];
 
 // realtime subscriptions need to be set up client-side
 // this component takes initial students as props and automatically
@@ -14,7 +14,7 @@ type Student = Database["public"]["Tables"]["students"]["Row"];
 export default function RealtimeStudents({
   serverStudents,
 }: {
-  serverStudents: Student[];
+  serverStudents: Students[];
 }) {
   const [students, setStudents] = useState(serverStudents);
   const { supabase } = useSupabase();
@@ -33,7 +33,7 @@ export default function RealtimeStudents({
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "students" },
-        (payload) => setStudents([...students, payload.new as Student])
+        (payload) => setStudents([...students, payload.new as Students])
       )
       .subscribe();
 
