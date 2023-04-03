@@ -1,20 +1,17 @@
-import CardTable from "@/components/dashboard/common/cardTable";
+import "server-only";
 
-export default function Page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  return (
-    <div className="mt-4 flex flex-wrap">
-      <div className="mb-12 w-full px-4">
-        <CardTable />
-      </div>
-      {/* <div className="w-full px-4 mb-12">
-        <CardTable color="dark" />
-      </div> */}
-    </div>
-  );
+import { createServerClient } from "@/lib/supabase-server";
+import RealtimeCourses from "./realtime-courses";
+
+// do not cache this page
+export const revalidate = 0;
+
+export default async function Realtime() {
+  const supabase = createServerClient();
+  const { data } = await supabase.from("courses").select("*");
+
+  // data can be passed from server components to client components
+  // this allows us to fetch the initial Students before rendering the page
+  // our <RealtimeStudents /> component will then subscribe to new Students client-side
+  return <RealtimeCourses serverCourses={data || []} />;
 }

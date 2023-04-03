@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Column,
   Table,
@@ -42,13 +44,12 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/solid";
 import SearchBar from "@/components/dashboard/common/SearchBar";
-import StatusPillCourses from "./statusPillCourses";
+import StatusPill from "@/components/dashboard/students/statusPill";
 
-
-type Course = Database["public"]["Tables"]["courses"]["Row"];
+type StudentByCurse = Database["public"]["Views"]["enrollment_info"]["Row"];
 interface CardTableProps {
   color: "light" | "dark";
-  data: Course[];
+  enronllmentInfo: StudentByCurse[];
 }
 
 declare module "@tanstack/table-core" {
@@ -73,57 +74,38 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-export default function CoursesTable({ data, color }: CardTableProps) {
+export default function CardStudentTable({ enronllmentInfo, color }: CardTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const router = useRouter();
 
-  const columns = useMemo<ColumnDef<Course, any>[]>(
+  const columns = useMemo<ColumnDef<StudentByCurse, any>[]>(
     () => [
       {
-        accessorKey: "course_id",
-        id: "course_id",
+        accessorKey: "student_id",
+        id: "student_id",
         header: () => "",
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "course_avatar_url",
-        id: "course_avatar_url",
+        accessorKey: "student_avatar_url",
+        id: "student_avatar_url",
         header: () => "",
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "course_title",
-        header: () => "Course",
+        accessorFn: (row) => ` ${row.first_name} ${row.last_name}`,
+        id: "fullName",
+        header: "Full Name",
+        cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "code",
-        header: () => <span>Code</span>,
+        accessorKey: "gender",
+        header: () => <span>Gender</span>,
         footer: (props) => props.column.id,
       },
-      {
-        accessorKey: "course_duration",
-        header: () => <span>Duration</span>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: "course_language",
-        header: () => "Languague",
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: "course_level",
-        header: () => "Course level",
-        footer: (props) => props.column.id,
-      },
-
-      {
-        accessorKey: "course_status",
-        header: "Status",
-        footer: (props) => props.column.id,
-      },
-    ],
+      ],
     []
   );
 
@@ -131,7 +113,7 @@ export default function CoursesTable({ data, color }: CardTableProps) {
   const refreshData = () => setData((old) => makeData(50000)); */
 
   const table = useReactTable({
-    data,
+    enronllmentInfo,
     columns,
     filterFns: {
       fuzzy: fuzzyFilter,
@@ -141,7 +123,7 @@ export default function CoursesTable({ data, color }: CardTableProps) {
       globalFilter,
     },
     initialState: {
-      columnVisibility: { course_avatar_url: false, course_id: false },
+      columnVisibility: { student_avatar_url: false, student_id: false },
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
@@ -183,7 +165,7 @@ export default function CoursesTable({ data, color }: CardTableProps) {
                   (color === "light" ? "text-blueGray-700" : "text-white")
                 }
               >
-                Courses
+                Students
               </h3>
             </div>
             <SearchBar
@@ -264,7 +246,7 @@ export default function CoursesTable({ data, color }: CardTableProps) {
                     key={row.id}
                     onClick={() =>
                       router.push(
-                        `/dashboard/courses/${row.getValue("course_id")}`
+                        `/dashboard/students/${row.getValue("student_id")}`
                       )
                     }
                     className={"cursor-pointer hover:bg-sky-100"}
@@ -272,35 +254,35 @@ export default function CoursesTable({ data, color }: CardTableProps) {
                     {row.getVisibleCells().map((cell) => {
                       return (
                         <>
-                          {cell.column.id === "course_title" ? (
-                              <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
-                                <Image
-                                  src={`${cell.row.getValue(
-                                    "course_avatar_url"
-                                  )}`}
-                                  alt={"avatar Img"}
-                                  height={60}
-                                  width={60}
-                                  className="w-12 h-12 bg-white border rounded-full"
-                                ></Image>
-                                <span
-                                  className={
-                                    "ml-3 font-bold " +
-                                    +(color === "light"
-                                      ? "text-blueGray-600"
-                                      : "text-white")
-                                  }
-                                >
-                                  {cell.row.getValue("course_title")}
-                                </span>
-                              </th>
-                            ) : cell.column.id === "course_status" ? (
+                          {cell.column.id === "fullName" ? (
+                            <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
+                              <Image
+                                src={`${cell.row.getValue(
+                                  "student_avatar_url"
+                                )}/?size=100x100`}
+                                alt={"avatar Img"}
+                                height={60}
+                                width={60}
+                                className="w-12 h-12 bg-white border rounded-full"
+                              ></Image>
+                              <span
+                                className={
+                                  "ml-3 font-bold " +
+                                  +(color === "light"
+                                    ? "text-blueGray-600"
+                                    : "text-white")
+                                }
+                              >
+                                {cell.row.getValue("fullName")}
+                              </span>
+                            </th>
+                          ) : cell.column.id === "status" ? (
                             <td
                               className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
                               key={cell.id}
                             >
                               {" "}
-                              <StatusPillCourses value={cell.row.getValue("course_status")} />
+                              <StatusPill value={cell.row.getValue("status")} />
                             </td>
                           ) : (
                             <td
