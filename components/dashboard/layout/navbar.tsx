@@ -10,7 +10,7 @@ export default function Navbar() {
           {/* Brand */}
           <a
             className="hidden text-sm font-semibold uppercase text-white lg:inline-block"
-            href="#pablo"
+            href="#account"
             onClick={(e) => e.preventDefault()}
           >
             Dashboard
