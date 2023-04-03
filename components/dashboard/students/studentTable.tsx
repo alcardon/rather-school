@@ -9,23 +9,16 @@ import {
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
   getPaginationRowModel,
-  sortingFns,
   getSortedRowModel,
   FilterFn,
-  SortingFn,
   ColumnDef,
   flexRender,
-  FilterFns,
 } from "@tanstack/react-table";
 
 import { useRouter } from "next/navigation";
-import { useReducer, useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from "@tanstack/match-sorter-utils";
+import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 
 import {
   SortIcon,
@@ -36,16 +29,20 @@ import {
 import type { Database } from "@/lib/database.types";
 
 import Image from "next/image";
-import StatusPill from "./statusPill";
-import SearchBar from "../common/SearchBar";
-import { Button, PageButton } from "../common/shared/Button";
+
+import {
+  Button,
+  PageButton,
+} from "@/components/dashboard/common/shared/Button";
+SearchBar;
 import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/solid";
-import Link from "next/link";
+import SearchBar from "@/components/dashboard/common/SearchBar";
+import StatusPill from "@/components/dashboard/students/statusPill";
 
 type Student = Database["public"]["Tables"]["students"]["Row"];
 interface CardTableProps {
@@ -109,6 +106,11 @@ export default function StudentTable({ data, color }: CardTableProps) {
       {
         accessorKey: "current_residence_country",
         header: () => <span>Country</span>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "instructor_id",
+        header: () => "Instructor",
         footer: (props) => props.column.id,
       },
       {
@@ -178,9 +180,9 @@ export default function StudentTable({ data, color }: CardTableProps) {
           (color === "light" ? "bg-white" : "bg-blueGray-700 text-white")
         }
       >
-        <div className="mb-0 rounded-t border-0 px-4 py-3">
+        <div className="px-4 py-3 mb-0 border-0 rounded-t">
           <div className="flex flex-wrap items-center">
-            <div className="relative w-full max-w-full flex-1 flex-grow px-4">
+            <div className="relative flex-1 flex-grow w-full max-w-full px-4">
               <h3
                 className={
                   "text-lg font-semibold" +
@@ -193,14 +195,14 @@ export default function StudentTable({ data, color }: CardTableProps) {
             <SearchBar
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
-              className="font-lg border-block border p-2 shadow"
+              className="p-2 border shadow font-lg border-block"
               placeholder="Search all columns..."
             />
           </div>
         </div>
 
         <div className="block w-full overflow-x-auto">
-          <table className="w-full border-collapse items-center bg-transparent">
+          <table className="items-center w-full bg-transparent border-collapse">
             <thead className="bg-gray-50">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -235,10 +237,10 @@ export default function StudentTable({ data, color }: CardTableProps) {
                                 )}
                                 {{
                                   asc: (
-                                    <SortUpIcon className="h-4 w-4 text-gray-400" />
+                                    <SortUpIcon className="w-4 h-4 text-gray-400" />
                                   ),
                                   desc: (
-                                    <SortDownIcon className="h-4 w-4 text-gray-400" />
+                                    <SortDownIcon className="w-4 h-4 text-gray-400" />
                                   ),
                                 }[header.column.getIsSorted() as string] ??
                                   null}
@@ -277,7 +279,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                       return (
                         <>
                           {cell.column.id === "fullName" ? (
-                            <th className="flex items-center whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 text-left align-middle text-xs">
+                            <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
                               <Image
                                 src={`${cell.row.getValue(
                                   "student_avatar_url"
@@ -285,7 +287,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                                 alt={"avatar Img"}
                                 height={60}
                                 width={60}
-                                className="h-12 w-12 rounded-full border bg-white"
+                                className="w-12 h-12 bg-white border rounded-full"
                               ></Image>
                               <span
                                 className={
@@ -300,7 +302,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                             </th>
                           ) : cell.column.id === "status" ? (
                             <td
-                              className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-6 px-6 align-middle text-xs"
+                              className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
                               key={cell.id}
                             >
                               {" "}
@@ -308,7 +310,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                             </td>
                           ) : (
                             <td
-                              className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-6 px-6 align-middle text-xs"
+                              className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
                               key={cell.id}
                             >
                               {flexRender(
@@ -328,8 +330,8 @@ export default function StudentTable({ data, color }: CardTableProps) {
 
           {/*   pagination */}
 
-          <div className="justify-betweenrounded-t flex items-center border-0 px-8 py-3">
-            <div className="flex flex-1 justify-between sm:hidden">
+          <div className="flex items-center px-8 py-3 border-0 justify-betweenrounded-t">
+            <div className="flex justify-between flex-1 sm:hidden">
               <PageButton
                 className=""
                 onClick={() => table.previousPage()}
@@ -337,7 +339,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
               >
                 <span className="sr-only">Previous</span>
                 <ChevronLeftIcon
-                  className="h-5 w-5 text-gray-400"
+                  className="w-5 h-5 text-gray-400"
                   aria-hidden="true"
                 />
               </PageButton>
@@ -349,14 +351,14 @@ export default function StudentTable({ data, color }: CardTableProps) {
               >
                 <span className="sr-only">Next</span>
                 <ChevronRightIcon
-                  className="h-5 w-5 text-gray-400"
+                  className="w-5 h-5 text-gray-400"
                   aria-hidden="true"
                 />
               </PageButton>
             </div>
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
               {" "}
-              <div className="flex items-baseline gap-x-2 space-x-2 text-xs">
+              <div className="flex items-baseline space-x-2 text-xs gap-x-2">
                 <span className="text-sm text-gray-700">
                   Page{" "}
                   <span className="font-medium">
@@ -367,7 +369,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                 <label>
                   <span className="sr-only">Items Per Page</span>
                   <select
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     value={table.getState().pagination.pageSize}
                     onChange={(e) => {
                       table.setPageSize(Number(e.target.value));
@@ -393,7 +395,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                   >
                     <span className="sr-only">First</span>
                     <ChevronDoubleLeftIcon
-                      className="h-5 w-5 text-gray-400"
+                      className="w-5 h-5 text-gray-400"
                       aria-hidden="true"
                     />
                   </PageButton>
@@ -404,7 +406,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                   >
                     <span className="sr-only">Previous</span>
                     <ChevronLeftIcon
-                      className="h-5 w-5 text-gray-400"
+                      className="w-5 h-5 text-gray-400"
                       aria-hidden="true"
                     />
                   </PageButton>
@@ -415,7 +417,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                   >
                     <span className="sr-only">Next</span>
                     <ChevronRightIcon
-                      className="h-5 w-5 text-gray-400"
+                      className="w-5 h-5 text-gray-400"
                       aria-hidden="true"
                     />
                   </PageButton>
@@ -426,7 +428,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                   >
                     <span className="sr-only">Last</span>
                     <ChevronDoubleRightIcon
-                      className="h-5 w-5 text-gray-400"
+                      className="w-5 h-5 text-gray-400"
                       aria-hidden="true"
                     />
                   </PageButton>
@@ -481,7 +483,7 @@ function Filter({
               ? `(${column.getFacetedMinMaxValues()?.[0]})`
               : ""
           }`}
-          className="w-24 rounded border shadow"
+          className="w-24 border rounded shadow"
         />
         <SearchBar
           type="number"
@@ -496,7 +498,7 @@ function Filter({
               ? `(${column.getFacetedMinMaxValues()?.[1]})`
               : ""
           }`}
-          className="w-24 rounded border shadow"
+          className="w-24 border rounded shadow"
         />
       </div>
       <div className="h-1" />
@@ -513,7 +515,7 @@ function Filter({
         value={(columnFilterValue ?? "") as string}
         onChange={(value) => column.setFilterValue(value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-36 rounded border shadow"
+        className="border rounded shadow w-36"
         list={column.id + "list"}
       />
       <div className="h-1" />

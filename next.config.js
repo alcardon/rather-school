@@ -12,8 +12,16 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "mqafhqdnhbhrbnoepmti.supabase.co",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
+
+
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

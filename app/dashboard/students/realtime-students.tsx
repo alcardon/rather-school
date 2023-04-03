@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import type { Database } from "@/lib/database.types";
 import StudentTable from "@/components/dashboard/students/studentTable";
+import CardTestTable from "@/components/dashboard/students/student/CardStudentCourses";
 
 type Students = Database["public"]["Tables"]["students"]["Row"];
 

@@ -3,7 +3,8 @@ import CardProfileImage from "@/components/dashboard/students/student/cardProfil
 import CardSiblings from "@/components/dashboard/students/student/cardSiblings";
 import { createServerClient } from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
-import CardCoursesStudent from "@/components/dashboard/students/student/cardCoursesStudent";
+import CardStudentCourses from "@/components/dashboard/students/student/CardStudentCourses";
+
 
 export const revalidate = 60;
 
@@ -13,7 +14,7 @@ export default async function Page({
   params: { student: string };
 }) {
   const supabase = createServerClient();
-
+  /* const { data } = await supabase.from("students").select("*"); */
   const { data: student_data } = await supabase
     .from("students")
     .select("*")
@@ -43,21 +44,21 @@ export default async function Page({
 
   const SiblingData = (await Promise.all(sibling_data_promises)).flat();
 
-  const { data: student_courses } = await supabase
+  const { data } = await supabase
     .from("student_enrollment_grade_info")
     .select("*")
     .eq("student_id", student);
 
   /*  console.log(student_courses);
    */
-  if (!student_courses) {
+  if (!data) {
     notFound();
   }
 
   return (
     <>
-      <div className="mb-36 flex flex-wrap">
-        <div className="mt-4 w-full flex-col flex-wrap px-3 xl:w-4/12">
+      <div className="flex flex-wrap mb-36">
+        <div className="flex-col flex-wrap w-full px-3 mt-4 xl:w-4/12">
           <div className="w-full">
             {" "}
             <CardProfileImage studentData={student_data || []} />
@@ -66,19 +67,17 @@ export default async function Page({
             <CardSiblings siblingsData={SiblingData || []} />
           </div>
         </div>
-        <div className="mt-4 w-full flex-col flex-wrap break-words px-3 xl:mb-0 xl:w-8/12">
+        <div className="flex-col flex-wrap w-full px-3 mt-4 break-words xl:mb-0 xl:w-8/12">
           <div className="w-full">
             {" "}
             <CardUserInfo studentData={student_data || []} />
           </div>
 
           <div className="w-full pt-6">
-            <CardCoursesStudent
-              studentCoursesData={student_courses || []}
-              color={"light"}
-            />
+          
+           <CardStudentCourses color="light" data={data || []} /> 
           </div>
-          {/*   <pre>{JSON.stringify(student_data, null, 2)}</pre> */}
+         
         </div>
       </div>
     </>
