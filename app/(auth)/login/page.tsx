@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
 
-import { useSupabase } from "@/components/auth/supabase-provider";
+import { useSupabase } from "@/components/common/supabase-provider";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
@@ -51,7 +51,7 @@ export default function Page() {
     // Handle form submission
     onSubmit: async ({ email, password }) => {
       await signIn(email, password);
-      router.push("/dashboard");
+      /* router.push("/dashboard"); */
     },
   });
   const { errors, touched, values, handleChange, handleSubmit } = formik;
@@ -71,7 +71,7 @@ export default function Page() {
                   <button
                     className="mb-1 mr-2 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-normal font-bold uppercase text-blueGray-700 shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none active:bg-blueGray-50"
                     type="button"
-                    onClick={handleGitHubLogin}
+                    onClick={ handleGitHubLogin }
                   >
                     <img alt="..." className="mr-1 w-5" src="/img/github.svg" />
                     Github
@@ -90,7 +90,7 @@ export default function Page() {
                 <div className="mb-3 text-center font-bold text-blueGray-400">
                   <small>Or sign in with credentials</small>
                 </div>
-                <form onSubmit={handleSubmit} method="POST">
+                <form onSubmit={ handleSubmit } method="POST">
                   <div className="relative mb-3 w-full">
                     <label
                       className="mb-2 block text-xs font-bold uppercase text-blueGray-600"
@@ -103,13 +103,13 @@ export default function Page() {
                       name="email"
                       className="w-full rounded border-0 bg-white px-3 py-3 text-sm text-blueGray-600 placeholder-blueGray-300 shadow transition-all duration-150 ease-linear focus:outline-none focus:ring"
                       placeholder="Email"
-                      onChange={handleChange}
-                      value={values.email}
+                      onChange={ handleChange }
+                      value={ values.email }
                       type="email"
                     />
-                    {errors.email && touched.email && (
-                      <div className="text-sm text-red-600">{errors.email}</div>
-                    )}
+                    { errors.email && touched.email && (
+                      <div className="text-sm text-red-600">{ errors.email }</div>
+                    ) }
                   </div>
                   <div className="relative mb-3 w-full">
                     <label
@@ -124,12 +124,12 @@ export default function Page() {
                       type="password"
                       className="w-full rounded border-0 bg-white px-3 py-3 text-sm text-blueGray-600 placeholder-blueGray-300 shadow transition-all duration-150 ease-linear focus:outline-none focus:ring"
                       placeholder="Password"
-                      value={values.password}
-                      onChange={handleChange}
+                      value={ values.password }
+                      onChange={ handleChange }
                     />
-                    {errors.password && touched.password && (
-                      <div className="text-red-600">{errors.password}</div>
-                    )}
+                    { errors.password && touched.password && (
+                      <div className="text-red-600">{ errors.password }</div>
+                    ) }
                   </div>
                   <div className="mt-6 text-center">
                     <button
@@ -139,11 +139,11 @@ export default function Page() {
                       Sign In
                     </button>
                   </div>
-                  {errorMsg != "" && successMsg == "" && (
+                  { errorMsg != "" && successMsg == "" && (
                     <div>
-                      <small>{errorMsg}</small>
+                      <small>{ errorMsg }</small>
                     </div>
-                  )}
+                  ) }
                   {/*  {successMsg != "" && (
                     <div>
                       <small>{successMsg}</small>
@@ -156,7 +156,7 @@ export default function Page() {
               <div className="w-1/2">
                 <a
                   href="#"
-                  onClick={(e) => e.preventDefault()}
+                  onClick={ (e) => e.preventDefault() }
                   className="text-blueGray-200"
                 >
                   <small>Forgot password?</small>

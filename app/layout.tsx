@@ -1,14 +1,16 @@
+/* "use client";
+ */
 import "./globals.css";
 import { createClient } from "@/lib/supabase-browser";
 import type { Database } from "@/lib/database.types";
 import type { SupabaseClient } from "@supabase/auth-helpers-nextjs";
 export type TypedSupabaseClient = SupabaseClient<Database>;
-import SupabaseListener from "@/components/auth/supabase-listener";
-import SupabaseProvider from "@/components/auth/supabase-provider";
+import SupabaseListener from "@/components/common/supabase-listener";
+import SupabaseProvider from "@/components/common/supabase-provider";
+
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "styles/tailwind.css";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import ThemeProviders from "@/components/common/themeproviders";
 
 // do not cache this layout
 export const revalidate = 0;
@@ -32,12 +34,16 @@ export default async function RootLayout({
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </head>
+
       <body>
-        <SupabaseProvider>
-          <SupabaseListener serverAccessToken={session?.access_token} />
-          {children}
-        </SupabaseProvider>
+        <ThemeProviders >
+          <SupabaseProvider>
+            <SupabaseListener serverAccessToken={ session?.access_token } />
+            { children }
+          </SupabaseProvider>
+        </ThemeProviders>
       </body>
+
     </html>
   );
 }

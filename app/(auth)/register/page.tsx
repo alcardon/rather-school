@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useSupabase } from "@/components/auth/supabase-provider";
+import { useSupabase } from "@/components/common/supabase-provider";
 import Link from "next/link";
 
 export default function Page() {
@@ -69,7 +69,7 @@ export default function Page() {
                   <button
                     className="mb-1 mr-2 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-normal font-bold uppercase text-blueGray-700 shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none active:bg-blueGray-50"
                     type="button"
-                    onClick={handleGitHubLogin}
+                    onClick={ handleGitHubLogin }
                   >
                     <img alt="..." className="mr-1 w-5" src="/img/github.svg" />
                     Github
@@ -89,8 +89,8 @@ export default function Page() {
                   <small>Or sign up with credentials</small>
                 </div>
 
-                <form onSubmit={handleSubmit} method="POST">
-                  {" "}
+                <form onSubmit={ handleSubmit } method="POST">
+                  { " " }
                   <div className="relative mb-3 w-full">
                     <label
                       className="mb-2 block text-xs font-bold uppercase text-blueGray-600"
@@ -103,14 +103,14 @@ export default function Page() {
                       id="email"
                       name="email"
                       placeholder="Email"
-                      onChange={handleChange}
-                      value={values.email}
+                      onChange={ handleChange }
+                      value={ values.email }
                       type="email"
                     />
-                    {errors.email && touched.email && (
-                      <div className="text-sm text-red-600">{errors.email}</div>
-                    )}
-                  </div>{" "}
+                    { errors.email && touched.email && (
+                      <div className="text-sm text-red-600">{ errors.email }</div>
+                    ) }
+                  </div>{ " " }
                   <div className="relative mb-3 w-full">
                     <label
                       className="mb-2 block text-xs font-bold uppercase text-blueGray-600"
@@ -124,12 +124,12 @@ export default function Page() {
                       name="password"
                       type="password"
                       placeholder="Password"
-                      value={values.password}
-                      onChange={handleChange}
+                      value={ values.password }
+                      onChange={ handleChange }
                     />
-                    {errors.password && touched.password && (
-                      <div className="text-red-600">{errors.password}</div>
-                    )}
+                    { errors.password && touched.password && (
+                      <div className="text-red-600">{ errors.password }</div>
+                    ) }
                   </div>
                   <div>
                     <label className="inline-flex cursor-pointer items-center">
@@ -139,11 +139,11 @@ export default function Page() {
                         className="form-checkbox ml-1 h-5 w-5 rounded border-0 text-blueGray-700 transition-all duration-150 ease-linear"
                       />
                       <span className="ml-2 text-sm font-semibold text-blueGray-600">
-                        I agree with the{" "}
+                        I agree with the{ " " }
                         <a
                           href="#none"
                           className="text-lightBlue-500"
-                          onClick={(e) => e.preventDefault()}
+                          onClick={ (e) => e.preventDefault() }
                         >
                           Privacy Policy
                         </a>
@@ -158,16 +158,16 @@ export default function Page() {
                       Create Account
                     </button>
                   </div>
-                  {errorMsg != "" && successMsg === "" && (
+                  { errorMsg != "" && successMsg === "" && (
                     <div>
-                      <small>{errorMsg}</small>
+                      <small>{ errorMsg }</small>
                     </div>
-                  )}
-                  {successMsg != "" && (
+                  ) }
+                  { successMsg != "" && (
                     <div>
-                      <small>{successMsg}</small>
+                      <small>{ successMsg }</small>
                     </div>
-                  )}
+                  ) }
                 </form>
               </div>
             </div>
