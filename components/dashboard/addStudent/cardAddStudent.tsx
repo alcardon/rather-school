@@ -14,38 +14,38 @@ import { notify } from '@/components/common/notify';
 
 
 
-export default function CardAddStudent({ serverStudents,
+export default function CardAddStudent({ serverCourses,
 }: {
-  serverStudents: Students[];
+  serverCourses: Courses[];
 }) {
 
 
   const [loading, setLoading] = useState(true)
   const [avatar_url, setAvatarUrl] = useState<Profiles['avatar_url']>(null)
-  const [students, setStudents] = useState(serverStudents);
-  const [selectedStudents, setSelectedStudents] = useState([])
+  const [courses, setCourses] = useState(serverCourses);
+  const [selectedCourses, setSelectedCourses] = useState([])
   const [studentRelatives, setstudentRelatives] = useState([])
   const { supabase } = useSupabase();
 
 
   useEffect(() => {
-    setStudents(serverStudents);
-  }, [serverStudents]);
+    setCourses(serverCourses);
+  }, [serverCourses]);
 
   useEffect(() => {
     const channel = supabase
       .channel("*")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "students" },
-        (payload) => setStudents([...students, payload.new as Students])
+        { event: "INSERT", schema: "public", table: "courses" },
+        (payload) => setCourses([...courses, payload.new as Courses])
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, setStudents, students]);
+  }, [supabase, setCourses, courses]);
 
   const SignUpSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Required"),
@@ -136,10 +136,10 @@ export default function CardAddStudent({ serverStudents,
 
 
     { /*  Create student enrollment in student_enrollment_grade table */ }
-    if (selectedStudents.length > 0) {
+    if (selectedCourses.length > 0) {
       try {
 
-        selectedStudents.map(async (course_id: String) => {
+        selectedCourses.map(async (course_id: String) => {
 
           let { error } = await supabase.from('student_enrollment_grade').insert({ student_id: newStudentId, course_id })
         })
@@ -444,7 +444,7 @@ export default function CardAddStudent({ serverStudents,
 
                 ></textarea>
               </div>
-              <div className="w-full lg:w-12/12"> <SelectCoursesTable color='light' data={ students } selectedStudents={ selectedStudents } setSelectedStudents={ setSelectedStudents } /></div>
+              <div className="w-full lg:w-12/12"> <SelectCoursesTable color='light' data={ courses } selectedCourses={ selectedCourses } setSelectedCourses={ setSelectedCourses } /></div>
             </div>
           </div>
 

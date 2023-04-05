@@ -1,10 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { HTMLProps } from 'react'
-import Checkbox from '@mui/material/Checkbox';
-
 import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import SearchBar from "@/components/dashboard/common/SearchBar";
 import StatusPillCourses from "../courses/statusPillCourses";
