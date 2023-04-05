@@ -1,3 +1,12 @@
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
+import SearchBar from "@/components/dashboard/common/SearchBar";
+import StatusPill from "@/components/dashboard/students/statusPill";
+import { Students } from "@/lib/types";
+import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
+
+
 import {
   Column,
   Table,
@@ -15,10 +24,6 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
-
-import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 
 import {
   SortIcon,
@@ -26,28 +31,24 @@ import {
   SortDownIcon,
 } from "@/components/dashboard/common/shared/Icons";
 
-import type { Database } from "@/lib/database.types";
-
-import Image from "next/image";
 
 import {
   Button,
   PageButton,
 } from "@/components/dashboard/common/shared/Button";
-SearchBar;
+
+
 import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/solid";
-import SearchBar from "@/components/dashboard/common/SearchBar";
-import StatusPill from "@/components/dashboard/students/statusPill";
 
-type Student = Database["public"]["Tables"]["students"]["Row"];
+
 interface CardTableProps {
   color: "light" | "dark";
-  data: Student[];
+  data: Students[];
 }
 
 declare module "@tanstack/table-core" {
@@ -77,7 +78,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
   const [globalFilter, setGlobalFilter] = useState("");
   const router = useRouter();
 
-  const columns = useMemo<ColumnDef<Student, any>[]>(
+  const columns = useMemo<ColumnDef<Students, any>[]>(
     () => [
       {
         accessorKey: "student_id",
@@ -106,11 +107,6 @@ export default function StudentTable({ data, color }: CardTableProps) {
       {
         accessorKey: "current_residence_country",
         header: () => <span>Country</span>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: "instructor_id",
-        header: () => "Instructor",
         footer: (props) => props.column.id,
       },
       {
@@ -193,8 +189,8 @@ export default function StudentTable({ data, color }: CardTableProps) {
               </h3>
             </div>
             <SearchBar
-              value={globalFilter ?? ""}
-              onChange={(value) => setGlobalFilter(String(value))}
+              value={ globalFilter ?? "" }
+              onChange={ (value) => setGlobalFilter(String(value)) }
               className="p-2 border shadow font-lg border-block"
               placeholder="Search all columns..."
             />
@@ -204,9 +200,9 @@ export default function StudentTable({ data, color }: CardTableProps) {
         <div className="block w-full overflow-x-auto">
           <table className="items-center w-full bg-transparent border-collapse">
             <thead className="bg-gray-50">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
+              { table.getHeaderGroups().map((headerGroup) => (
+                <tr key={ headerGroup.id }>
+                  { headerGroup.headers.map((header) => {
                     return (
                       <>
                         <th
@@ -217,25 +213,25 @@ export default function StudentTable({ data, color }: CardTableProps) {
                               ? "border-blueGray-100 bg-blueGray-50 text-blueGray-500"
                               : "border-blueGray-500 bg-blueGray-600 text-blueGray-200")
                           }
-                          key={header.id}
+                          key={ header.id }
                         >
-                          {header.isPlaceholder ? null : (
+                          { header.isPlaceholder ? null : (
                             <>
                               <div
-                                {...{
+                                { ...{
                                   className: header.column.getCanSort()
                                     ? "cursor-pointer select-none"
                                     : "",
                                   onClick:
                                     header.column.getToggleSortingHandler(),
-                                }}
+                                } }
                                 className="flex items-center justify-between"
                               >
-                                {flexRender(
+                                { flexRender(
                                   header.column.columnDef.header,
                                   header.getContext()
-                                )}
-                                {{
+                                ) }
+                                { {
                                   asc: (
                                     <SortUpIcon className="w-4 h-4 text-gray-400" />
                                   ),
@@ -243,7 +239,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                                     <SortDownIcon className="w-4 h-4 text-gray-400" />
                                   ),
                                 }[header.column.getIsSorted() as string] ??
-                                  null}
+                                  null }
                               </div>
                               {/*  {header.column.getCanFilter() ? (
                                 <div>
@@ -254,39 +250,39 @@ export default function StudentTable({ data, color }: CardTableProps) {
                                 </div>
                               ) : null} */}
                             </>
-                          )}
+                          ) }
                         </th>
                       </>
                     );
-                  })}
+                  }) }
                 </tr>
-              ))}
+              )) }
             </thead>
 
             <tbody>
-              {table.getRowModel().rows.map((row) => {
+              { table.getRowModel().rows.map((row) => {
                 return (
                   <tr
-                    key={row.id}
-                    onClick={() =>
+                    key={ row.id }
+                    onClick={ () =>
                       router.push(
                         `/dashboard/students/${row.getValue("student_id")}`
                       )
                     }
-                    className={"cursor-pointer hover:bg-sky-100"}
+                    className={ "cursor-pointer hover:bg-sky-100" }
                   >
-                    {row.getVisibleCells().map((cell) => {
+                    { row.getVisibleCells().map((cell) => {
                       return (
                         <>
-                          {cell.column.id === "fullName" ? (
+                          { cell.column.id === "fullName" ? (
                             <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
                               <Image
-                                src={`${cell.row.getValue(
+                                src={ `${cell.row.getValue(
                                   "student_avatar_url"
-                                )}/?size=100x100`}
-                                alt={"avatar Img"}
-                                height={60}
-                                width={60}
+                                )}/?size=100x100` }
+                                alt={ "avatar Img" }
+                                height={ 60 }
+                                width={ 60 }
                                 className="w-12 h-12 bg-white border rounded-full"
                               ></Image>
                               <span
@@ -297,45 +293,45 @@ export default function StudentTable({ data, color }: CardTableProps) {
                                     : "text-white")
                                 }
                               >
-                                {cell.row.getValue("fullName")}
+                                { cell.row.getValue("fullName") }
                               </span>
                             </th>
                           ) : cell.column.id === "status" ? (
                             <td
                               className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
-                              key={cell.id}
+                              key={ cell.id }
                             >
-                              {" "}
-                              <StatusPill value={cell.row.getValue("status")} />
+                              { " " }
+                              <StatusPill value={ cell.row.getValue("status") } />
                             </td>
                           ) : (
                             <td
                               className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
-                              key={cell.id}
+                              key={ cell.id }
                             >
-                              {flexRender(
+                              { flexRender(
                                 cell.column.columnDef.cell,
                                 cell.getContext()
-                              )}
+                              ) }
                             </td>
-                          )}
+                          ) }
                         </>
                       );
-                    })}
+                    }) }
                   </tr>
                 );
-              })}
+              }) }
             </tbody>
           </table>
 
-          {/*   pagination */}
+          {/*   pagination */ }
 
           <div className="flex items-center px-8 py-3 border-0 justify-betweenrounded-t">
             <div className="flex justify-between flex-1 sm:hidden">
               <PageButton
                 className=""
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
+                onClick={ () => table.previousPage() }
+                disabled={ !table.getCanPreviousPage() }
               >
                 <span className="sr-only">Previous</span>
                 <ChevronLeftIcon
@@ -346,8 +342,8 @@ export default function StudentTable({ data, color }: CardTableProps) {
 
               <PageButton
                 className=""
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
+                onClick={ () => table.nextPage() }
+                disabled={ !table.getCanNextPage() }
               >
                 <span className="sr-only">Next</span>
                 <ChevronRightIcon
@@ -357,29 +353,29 @@ export default function StudentTable({ data, color }: CardTableProps) {
               </PageButton>
             </div>
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-              {" "}
+              { " " }
               <div className="flex items-baseline space-x-2 text-xs gap-x-2">
                 <span className="text-sm text-gray-700">
-                  Page{" "}
+                  Page{ " " }
                   <span className="font-medium">
-                    {table.getState().pagination.pageIndex + 1}
-                  </span>{" "}
-                  of <span className="font-medium">{table.getPageCount()}</span>
+                    { table.getState().pagination.pageIndex + 1 }
+                  </span>{ " " }
+                  of <span className="font-medium">{ table.getPageCount() }</span>
                 </span>
                 <label>
                   <span className="sr-only">Items Per Page</span>
                   <select
                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    value={table.getState().pagination.pageSize}
-                    onChange={(e) => {
+                    value={ table.getState().pagination.pageSize }
+                    onChange={ (e) => {
                       table.setPageSize(Number(e.target.value));
-                    }}
+                    } }
                   >
-                    {[10, 20, 30].map((pageSize) => (
-                      <option key={pageSize} value={pageSize}>
-                        {pageSize}
+                    { [10, 20, 30].map((pageSize) => (
+                      <option key={ pageSize } value={ pageSize }>
+                        { pageSize }
                       </option>
-                    ))}
+                    )) }
                   </select>
                 </label>
               </div>
@@ -390,8 +386,8 @@ export default function StudentTable({ data, color }: CardTableProps) {
                 >
                   <PageButton
                     className="rounded-l-md"
-                    onClick={() => table.setPageIndex(0)}
-                    disabled={!table.getCanPreviousPage()}
+                    onClick={ () => table.setPageIndex(0) }
+                    disabled={ !table.getCanPreviousPage() }
                   >
                     <span className="sr-only">First</span>
                     <ChevronDoubleLeftIcon
@@ -401,8 +397,8 @@ export default function StudentTable({ data, color }: CardTableProps) {
                   </PageButton>
                   <PageButton
                     className=""
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
+                    onClick={ () => table.previousPage() }
+                    disabled={ !table.getCanPreviousPage() }
                   >
                     <span className="sr-only">Previous</span>
                     <ChevronLeftIcon
@@ -412,8 +408,8 @@ export default function StudentTable({ data, color }: CardTableProps) {
                   </PageButton>
                   <PageButton
                     className=""
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
+                    onClick={ () => table.nextPage() }
+                    disabled={ !table.getCanNextPage() }
                   >
                     <span className="sr-only">Next</span>
                     <ChevronRightIcon
@@ -423,8 +419,8 @@ export default function StudentTable({ data, color }: CardTableProps) {
                   </PageButton>
                   <PageButton
                     className="rounded-r-md"
-                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                    disabled={!table.getCanNextPage()}
+                    onClick={ () => table.setPageIndex(table.getPageCount() - 1) }
+                    disabled={ !table.getCanNextPage() }
                   >
                     <span className="sr-only">Last</span>
                     <ChevronDoubleRightIcon
@@ -437,11 +433,11 @@ export default function StudentTable({ data, color }: CardTableProps) {
             </div>
           </div>
 
-          {/*   <div>{table.getPrePaginationRowModel().rows.length} Rows</div> */}
+          {/*   <div>{table.getPrePaginationRowModel().rows.length} Rows</div> */ }
         </div>
       </div>
 
-      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */ }
     </>
   );
 }
@@ -472,32 +468,30 @@ function Filter({
       <div className="flex space-x-2">
         <SearchBar
           type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
-          value={(columnFilterValue as [number, number])?.[0] ?? ""}
-          onChange={(value) =>
+          min={ Number(column.getFacetedMinMaxValues()?.[0] ?? "") }
+          max={ Number(column.getFacetedMinMaxValues()?.[1] ?? "") }
+          value={ (columnFilterValue as [number, number])?.[0] ?? "" }
+          onChange={ (value) =>
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
-          placeholder={`Min ${
-            column.getFacetedMinMaxValues()?.[0]
-              ? `(${column.getFacetedMinMaxValues()?.[0]})`
-              : ""
-          }`}
+          placeholder={ `Min ${column.getFacetedMinMaxValues()?.[0]
+            ? `(${column.getFacetedMinMaxValues()?.[0]})`
+            : ""
+            }` }
           className="w-24 border rounded shadow"
         />
         <SearchBar
           type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
-          value={(columnFilterValue as [number, number])?.[1] ?? ""}
-          onChange={(value) =>
+          min={ Number(column.getFacetedMinMaxValues()?.[0] ?? "") }
+          max={ Number(column.getFacetedMinMaxValues()?.[1] ?? "") }
+          value={ (columnFilterValue as [number, number])?.[1] ?? "" }
+          onChange={ (value) =>
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
-          placeholder={`Max ${
-            column.getFacetedMinMaxValues()?.[1]
-              ? `(${column.getFacetedMinMaxValues()?.[1]})`
-              : ""
-          }`}
+          placeholder={ `Max ${column.getFacetedMinMaxValues()?.[1]
+            ? `(${column.getFacetedMinMaxValues()?.[1]})`
+            : ""
+            }` }
           className="w-24 border rounded shadow"
         />
       </div>
@@ -505,18 +499,18 @@ function Filter({
     </div>
   ) : (
     <>
-      <datalist id={column.id + "list"}>
-        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
-        ))}
+      <datalist id={ column.id + "list" }>
+        { sortedUniqueValues.slice(0, 5000).map((value: any) => (
+          <option value={ value } key={ value } />
+        )) }
       </datalist>
       <SearchBar
         type="text"
-        value={(columnFilterValue ?? "") as string}
-        onChange={(value) => column.setFilterValue(value)}
-        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
+        value={ (columnFilterValue ?? "") as string }
+        onChange={ (value) => column.setFilterValue(value) }
+        placeholder={ `Search... (${column.getFacetedUniqueValues().size})` }
         className="border rounded shadow w-36"
-        list={column.id + "list"}
+        list={ column.id + "list" }
       />
       <div className="h-1" />
     </>

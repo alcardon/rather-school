@@ -1,13 +1,9 @@
 "use client";
 
-import { useSupabase } from "@/components/auth/supabase-provider";
+import { useSupabase } from "@/components/common/supabase-provider";
 import { useEffect, useState } from "react";
-
-import type { Database } from "@/lib/database.types";
 import StudentTable from "@/components/dashboard/students/studentTable";
-import CardTestTable from "@/components/dashboard/students/student/CardStudentCourses";
-
-type Students = Database["public"]["Tables"]["students"]["Row"];
+import { Students } from "@/lib/types";
 
 // realtime subscriptions need to be set up client-side
 // this component takes initial students as props and automatically
@@ -47,7 +43,7 @@ export default function RealtimeStudents({
     <>
       <div className="mt-4 flex flex-wrap">
         <div className="mb-12 w-full px-4">
-          <StudentTable color="light" data={students} />
+          <StudentTable color="light" data={ students } />
         </div>
       </div>
     </>
