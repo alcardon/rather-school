@@ -5,20 +5,16 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Students } from "@/lib/types";
 
-export default function CardSiblings({
-  siblingsData,
-}: {
-  siblingsData: Students[];
-}) {
+export default function CardTeachers() {
   const router = useRouter();
   return (
     <div className="p-3 bg-white rounded shadow">
       <div className="flex items-center pl-4 space-x-4 font-semibold leading-8 text-gray-900">
-        <i className={ "fas fa-users text-emerald-600" }></i>
-        <span>Siblings</span>
+        <i className={ "fas fa-chalkboard-teacher text-emerald-600" }></i>
+        <span>Teachers</span>
       </div>
       <div className="grid grid-cols-3">
-        { siblingsData.map((sibling) => (
+        {/* { siblingsData.map((sibling) => (
           <div
             className="flex flex-col items-center justify-center my-2 cursor-pointer"
             onClick={ () =>
@@ -37,7 +33,7 @@ export default function CardSiblings({
               { `${sibling?.first_name} ${sibling?.last_name}` }
             </a>
           </div>
-        )) }
+        )) } */}
       </div>
     </div>
   );

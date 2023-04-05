@@ -2,7 +2,8 @@
 
 import { createRef, useState } from "react";
 import { createPopper } from "@popperjs/core";
-import { useSupabase } from "@/components/auth/supabase-provider";
+import { useSupabase } from "@/components/common/supabase-provider";
+import { notify } from "@/components/common/notify";
 
 const UserDropdown = () => {
   // dropdown props
@@ -22,30 +23,36 @@ const UserDropdown = () => {
 
   const SignOutUser = async () => {
     const { error } = await supabase.auth.signOut();
+    if (error) {
+      notify("error", "")
+    } else {
+      notify("success", "Successful logout")
+    }
+
   };
   return (
     <>
       <a
         className="block text-blueGray-500"
         href="#pablo"
-        ref={btnDropdownRef}
-        onClick={(e) => {
+        ref={ btnDropdownRef }
+        onClick={ (e) => {
           e.preventDefault();
           dropdownPopoverShow ? closeDropdownPopover() : openDropdownPopover();
-        }}
+        } }
       >
         <div className="flex items-center">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-blueGray-200 text-sm text-white">
+          <span className="inline-flex items-center justify-center w-12 h-12 text-sm text-white rounded-full bg-blueGray-200">
             <img
               alt="..."
-              className="w-full rounded-full border-none align-middle shadow-lg"
+              className="w-full align-middle border-none rounded-full shadow-lg"
               src="/img/team-1-800x800.jpg"
             />
           </span>
         </div>
       </a>
       <div
-        ref={popoverDropdownRef}
+        ref={ popoverDropdownRef }
         className={
           (dropdownPopoverShow ? "block " : "hidden ") +
           "z-50 float-left min-w-48 list-none rounded bg-white py-2 text-left text-base shadow-lg"
@@ -56,10 +63,10 @@ const UserDropdown = () => {
           className={
             "block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-blueGray-700"
           }
-          onClick={(e) => {
+          onClick={ (e) => {
             e.preventDefault();
             SignOutUser();
-          }}
+          } }
         >
           Sign out
         </a>
@@ -68,7 +75,7 @@ const UserDropdown = () => {
           className={
             "block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-blueGray-700"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={ (e) => e.preventDefault() }
         >
           View profile
         </a>

@@ -1,20 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import cn from "classnames";
+import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
-
 import { useSupabase } from "@/components/common/supabase-provider";
 import { useRouter } from "next/navigation";
+import { notify } from "@/components/common/notify";
+
+
 
 export default function Page() {
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
+
   const { supabase } = useSupabase();
   const router = useRouter();
-
   const handleGitHubLogin = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "github",
@@ -27,10 +26,13 @@ export default function Page() {
       password: password,
     });
 
+    if (data.session?.access_token) {
+      notify("success", "Successful login")
+    }
+
     if (error) {
-      setErrorMsg(error.message);
-    } else {
-      setSuccessMsg(`Success Login ${data.session?.access_token}`);
+      notify("error", "Error trying to login")
+
     }
   }
 
@@ -57,43 +59,43 @@ export default function Page() {
   const { errors, touched, values, handleChange, handleSubmit } = formik;
   return (
     <>
-      <div className="container mx-auto h-full px-4">
-        <div className="flex h-full content-center items-center justify-center">
+      <div className="container h-full px-4 mx-auto">
+        <div className="flex items-center content-center justify-center h-full">
           <div className="w-full px-4 lg:w-4/12">
-            <div className="relative mb-6 flex w-full min-w-0 flex-col break-words rounded-lg border-0 bg-blueGray-200 shadow-lg">
-              <div className="mb-0 rounded-t px-6 py-6">
+            <div className="relative flex flex-col w-full min-w-0 mb-6 break-words border-0 rounded-lg shadow-lg bg-blueGray-200">
+              <div className="px-6 py-6 mb-0 rounded-t">
                 <div className="mb-3 text-center">
                   <h6 className="text-sm font-bold text-blueGray-500">
                     Sign in with
                   </h6>
                 </div>
-                <div className="btn-wrapper text-center">
+                <div className="text-center btn-wrapper">
                   <button
-                    className="mb-1 mr-2 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-normal font-bold uppercase text-blueGray-700 shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none active:bg-blueGray-50"
+                    className="inline-flex items-center px-4 py-2 mb-1 mr-2 text-xs font-normal font-bold uppercase transition-all duration-150 ease-linear bg-white rounded shadow outline-none text-blueGray-700 hover:shadow-md focus:outline-none active:bg-blueGray-50"
                     type="button"
                     onClick={ handleGitHubLogin }
                   >
-                    <img alt="..." className="mr-1 w-5" src="/img/github.svg" />
+                    <img alt="..." className="w-5 mr-1" src="/img/github.svg" />
                     Github
                   </button>
                   <button
-                    className="mb-1 mr-1 inline-flex items-center rounded bg-white px-4 py-2 text-xs font-normal font-bold uppercase text-blueGray-700 shadow outline-none transition-all duration-150 ease-linear hover:shadow-md focus:outline-none active:bg-blueGray-50"
+                    className="inline-flex items-center px-4 py-2 mb-1 mr-1 text-xs font-normal font-bold uppercase transition-all duration-150 ease-linear bg-white rounded shadow outline-none text-blueGray-700 hover:shadow-md focus:outline-none active:bg-blueGray-50"
                     type="button"
                   >
-                    <img alt="..." className="mr-1 w-5" src="/img/google.svg" />
+                    <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
                     Google
                   </button>
                 </div>
-                <hr className="border-b-1 mt-6 border-blueGray-300" />
+                <hr className="mt-6 border-b-1 border-blueGray-300" />
               </div>
               <div className="flex-auto px-4 py-10 pt-0 lg:px-10">
-                <div className="mb-3 text-center font-bold text-blueGray-400">
+                <div className="mb-3 font-bold text-center text-blueGray-400">
                   <small>Or sign in with credentials</small>
                 </div>
                 <form onSubmit={ handleSubmit } method="POST">
-                  <div className="relative mb-3 w-full">
+                  <div className="relative w-full mb-3">
                     <label
-                      className="mb-2 block text-xs font-bold uppercase text-blueGray-600"
+                      className="block mb-2 text-xs font-bold uppercase text-blueGray-600"
                       htmlFor="grid-password"
                     >
                       Email
@@ -101,7 +103,7 @@ export default function Page() {
                     <input
                       id="email"
                       name="email"
-                      className="w-full rounded border-0 bg-white px-3 py-3 text-sm text-blueGray-600 placeholder-blueGray-300 shadow transition-all duration-150 ease-linear focus:outline-none focus:ring"
+                      className="w-full px-3 py-3 text-sm transition-all duration-150 ease-linear bg-white border-0 rounded shadow text-blueGray-600 placeholder-blueGray-300 focus:outline-none focus:ring"
                       placeholder="Email"
                       onChange={ handleChange }
                       value={ values.email }
@@ -111,9 +113,9 @@ export default function Page() {
                       <div className="text-sm text-red-600">{ errors.email }</div>
                     ) }
                   </div>
-                  <div className="relative mb-3 w-full">
+                  <div className="relative w-full mb-3">
                     <label
-                      className="mb-2 block text-xs font-bold uppercase text-blueGray-600"
+                      className="block mb-2 text-xs font-bold uppercase text-blueGray-600"
                       htmlFor="grid-password"
                     >
                       Password
@@ -122,7 +124,7 @@ export default function Page() {
                       id="password"
                       name="password"
                       type="password"
-                      className="w-full rounded border-0 bg-white px-3 py-3 text-sm text-blueGray-600 placeholder-blueGray-300 shadow transition-all duration-150 ease-linear focus:outline-none focus:ring"
+                      className="w-full px-3 py-3 text-sm transition-all duration-150 ease-linear bg-white border-0 rounded shadow text-blueGray-600 placeholder-blueGray-300 focus:outline-none focus:ring"
                       placeholder="Password"
                       value={ values.password }
                       onChange={ handleChange }
@@ -133,26 +135,16 @@ export default function Page() {
                   </div>
                   <div className="mt-6 text-center">
                     <button
-                      className="mb-1 mr-1 w-full rounded bg-blueGray-800 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-blueGray-600"
+                      className="w-full px-6 py-3 mb-1 mr-1 text-sm font-bold text-white uppercase transition-all duration-150 ease-linear rounded shadow outline-none bg-blueGray-800 hover:shadow-lg focus:outline-none active:bg-blueGray-600"
                       type="submit"
                     >
                       Sign In
                     </button>
                   </div>
-                  { errorMsg != "" && successMsg == "" && (
-                    <div>
-                      <small>{ errorMsg }</small>
-                    </div>
-                  ) }
-                  {/*  {successMsg != "" && (
-                    <div>
-                      <small>{successMsg}</small>
-                    </div>
-                  )} */}
                 </form>
               </div>
             </div>
-            <div className="relative mt-6 flex flex-wrap">
+            <div className="relative flex flex-wrap mt-6">
               <div className="w-1/2">
                 <a
                   href="#"

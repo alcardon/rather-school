@@ -8,54 +8,54 @@ export default function CardUserInfo({
   courseData: courseType[];
 }) {
 
-    
+
 
   return (
     <div className="relative p-3 bg-white rounded shadow">
       <div className="flex items-center pl-4 space-x-4 font-semibold leading-8 text-gray-900">
-        <i className={"fas fa-university text-emerald-600"}></i>
+        <i className={ "fas fa-university text-emerald-600" }></i>
         <span className="tracking-wide text-blueGray-800">Course </span>
       </div>
       <div className="pt-3 text-gray-700">
         <div className="grid text-sm md:grid-cols-1">
           <div className="grid grid-cols-1">
-           
-            <div className="px-4 py-2 font-bold">{courseData[0]?.course_title}</div>
+
+            <div className="px-4 py-2 font-bold">{ courseData[0]?.course_title }</div>
           </div>
           <div className="grid grid-cols-1">
             <div className="px-4 pt-2 font-semibold">Description</div>
-            <div className="px-4 py-2">{courseData[0]?.course_description}</div>
+            <div className="px-4 py-2">{ courseData[0]?.course_description }</div>
           </div>
-          </div>
-           <div className="grid pt-2 text-sm md:grid-cols-2">
-             <div className="grid grid-cols-2">
+        </div>
+        <div className="grid pt-2 text-sm md:grid-cols-2">
+          <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Code</div>
-            <div className="px-4 py-2">{courseData[0]?.code}</div>
+            <div className="px-4 py-2">{ courseData[0]?.code }</div>
           </div>
-            <div className="grid grid-cols-2">
+          <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Subject</div>
-            <div className="px-4 py-2">{courseData[0]?.course_subject}</div>
+            <div className="px-4 py-2">{ courseData[0]?.course_subject }</div>
           </div>
-            <div className="grid grid-cols-2">
+          <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Duration</div>
-            <div className="px-4 py-2">{courseData[0]?.course_duration}</div>
+            <div className="px-4 py-2">{ courseData[0]?.course_duration }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Language</div>
-            <div className="px-4 py-2">{courseData[0]?.course_language}</div>
+            <div className="px-4 py-2">{ courseData[0]?.course_language }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Level</div>
-            <div className="px-4 py-2">{courseData[0]?.course_level}</div>
+            <div className="px-4 py-2">{ courseData[0]?.course_level }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Max students per class</div>
-            <div className="px-4 py-2">{courseData[0]?.max_students}</div>
+            <div className="px-4 py-2">{ courseData[0]?.max_students }</div>
           </div>
-          
-         
-           </div>
-           {/*<div className="grid grid-cols-2">
+
+
+        </div>
+        {/*<div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Gender</div>
             <div className="px-4 py-2">{courseData[0]?.gender}</div>
           </div>
@@ -105,8 +105,8 @@ export default function CardUserInfo({
             <div className="px-4 py-2 font-semibold">Birthday</div>
             <div className="px-4 py-2">{birthday || ""}</div>
           </div> */}
-        </div>
       </div>
-   
+    </div>
+
   );
 }

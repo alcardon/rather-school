@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth, VIEWS } from "@/components/auth/authProvider";
-import { useSupabase } from "@/components/auth/supabase-provider";
+import { useSupabase } from "@/components/common/supabase-provider";
 import {
   Button,
   Flex,
@@ -50,71 +50,71 @@ export default function ResetPassword() {
 
   return (
     <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
+      minH={ "100vh" }
+      align={ "center" }
+      justify={ "center" }
+      bg={ useColorModeValue("gray.50", "gray.800") }
     >
       <Stack
-        spacing={4}
-        w={"full"}
-        maxW={"md"}
-        bg={useColorModeValue("white", "gray.700")}
-        rounded={"xl"}
-        boxShadow={"lg"}
-        p={6}
-        my={12}
+        spacing={ 4 }
+        w={ "full" }
+        maxW={ "md" }
+        bg={ useColorModeValue("white", "gray.700") }
+        rounded={ "xl" }
+        boxShadow={ "lg" }
+        p={ 6 }
+        my={ 12 }
       >
-        <Stack align={"center"}>
-          <Heading lineHeight={1.1} fontSize={{ base: "1xl", md: "2xl" }}>
+        <Stack align={ "center" }>
+          <Heading lineHeight={ 1.1 } fontSize={ { base: "1xl", md: "2xl" } }>
             Forgot Password? 🔒
           </Heading>
-          <Text color={"gray.600"}>
+          <Text color={ "gray.600" }>
             Enter your email and we′ll send you instructions to reset your
             password
           </Text>
         </Stack>
 
-        <form onSubmit={handleSubmit(resetPassword)}>
-          <Stack spacing={4}>
-            <FormControl isInvalid={Boolean(errors.email)} isRequired>
+        <form onSubmit={ handleSubmit(resetPassword) }>
+          <Stack spacing={ 4 }>
+            <FormControl isInvalid={ Boolean(errors.email) } isRequired>
               <FormLabel>Email address</FormLabel>
               <Input
                 id="email"
                 placeholder="your-email@example.com"
-                _placeholder={{ color: "gray.500" }}
-                {...register("email", {
+                _placeholder={ { color: "gray.500" } }
+                { ...register("email", {
                   required: "required",
                   pattern: {
                     value: /\S+@\S+\.\S+/,
                     message: "Entered value does not match email format",
                   },
-                })}
+                }) }
                 type="text"
               />
               <FormErrorMessage>
-                {errors.email?.message.toString()}
+                { errors.email?.message.toString() }
               </FormErrorMessage>
             </FormControl>
-            <Stack spacing={6}>
+            <Stack spacing={ 6 }>
               <Stack
-                direction={{ base: "column", sm: "row" }}
-                align={"start"}
-                justify={"right"}
+                direction={ { base: "column", sm: "row" } }
+                align={ "start" }
+                justify={ "right" }
               >
-                <Link color={"blue.400"} onClick={() => setView(VIEWS.SIGN_IN)}>
+                <Link color={ "blue.400" } onClick={ () => setView(VIEWS.SIGN_IN) }>
                   <ChevronLeftIcon />
                   Back to login
                 </Link>
               </Stack>
               <Button
-                bg={"blue.400"}
-                color={"white"}
-                isLoading={isSubmitting}
+                bg={ "blue.400" }
+                color={ "white" }
+                isLoading={ isSubmitting }
                 type="submit"
-                _hover={{
+                _hover={ {
                   bg: "blue.500",
-                }}
+                } }
               >
                 Send Reset Link
               </Button>

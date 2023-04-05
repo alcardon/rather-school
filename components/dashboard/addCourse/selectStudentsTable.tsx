@@ -1,11 +1,17 @@
+"use client"
+
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
-import Image from "next/image";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { HTMLProps } from 'react'
+import Checkbox from '@mui/material/Checkbox';
+import { Students } from "@/lib/types";
 import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import SearchBar from "@/components/dashboard/common/SearchBar";
-import StatusPillCourses from "./statusPillCourses";
-import { Courses } from "@/lib/types";
-
+import StatusPillCourses from "../courses/statusPillCourses";
+import Image from "next/image";
+import { PageButton } from "@/components/dashboard/common/Button";
+import { SortUpIcon, SortDownIcon } from "@/components/dashboard/common/Icons";
+import IndeterminateCheckbox from "@/components/dashboard/addStudent/indeterminateCheckbox";
 
 import {
   Column,
@@ -26,29 +32,21 @@ import {
 
 
 import {
-  SortIcon,
-  SortUpIcon,
-  SortDownIcon,
-} from "@/components/dashboard/common/Icons";
-
-
-import {
-  Button,
-  PageButton,
-} from "@/components/dashboard/common/Button";
-
-
-import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/solid";
+import { useRowSelect } from "react-table";
+import StatusPill from "../students/statusPill";
+
 
 
 interface CardTableProps {
   color: "light" | "dark";
-  data: Courses[];
+  data: Students[];
+  selectedStudents: any;
+  setSelectedStudents: any;
 }
 
 declare module "@tanstack/table-core" {
@@ -73,62 +71,87 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-export default function CoursesTable({ data, color }: CardTableProps) {
+export default function selectStudentsTable({ data, color, setSelectedStudents }: CardTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const router = useRouter();
 
-  const columns = useMemo<ColumnDef<Courses, any>[]>(
+
+
+
+  const columns = useMemo<ColumnDef<Students, any>[]>(
     () => [
       {
-        accessorKey: "course_id",
-        id: "course_id",
+        id: 'select',
+        header: ({ table }) => (
+          <IndeterminateCheckbox
+            { ...{
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
+            } }
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="px-1">
+            <IndeterminateCheckbox
+              { ...{
+                checked: row.getIsSelected(),
+                disabled: !row.getCanSelect(),
+                indeterminate: row.getIsSomeSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              } }
+            />
+          </div>
+        ),
+      },
+      {
+        accessorKey: "student_id",
+        id: "student_id",
         header: () => "",
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "course_avatar_url",
-        id: "course_avatar_url",
+        accessorKey: "student_avatar_url",
+        id: "student_avatar_url",
         header: () => "",
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "course_title",
-        header: () => "Course",
+        accessorFn: (row) => ` ${row.first_name} ${row.last_name}`,
+        id: "fullName",
+        header: "Full Name",
+        cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "code",
-        header: () => <span>Code</span>,
+        accessorKey: "gender",
+        header: () => <span>Gender</span>,
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "course_duration",
-        header: () => <span>Duration</span>,
+        accessorKey: "current_residence_country",
+        header: () => <span>Country</span>,
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "course_language",
-        header: () => "Languague",
+        accessorKey: "email_address",
+        header: () => "Email",
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "course_level",
-        header: () => "Course level",
+        accessorKey: "preferred_lang",
+        header: () => "Language",
         footer: (props) => props.column.id,
       },
 
       {
-        accessorKey: "course_status",
+        accessorKey: "status",
         header: "Status",
         footer: (props) => props.column.id,
       },
     ],
     []
   );
-
-  /*   const [data, setData] = useState<Person[]>(() => makeData(50000));
-  const refreshData = () => setData((old) => makeData(50000)); */
 
   const table = useReactTable({
     data,
@@ -139,13 +162,17 @@ export default function CoursesTable({ data, color }: CardTableProps) {
     state: {
       columnFilters,
       globalFilter,
+      /*   rowSelection, */
     },
     initialState: {
-      columnVisibility: { course_avatar_url: false, course_id: false },
+      columnVisibility: { student_avatar_url: false, student_id: false },
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
+    /*  enableRowSelection: true, //enable row selection for all rows */
+    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+    /*  onRowSelectionChange: setRowSelection, */
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -153,38 +180,48 @@ export default function CoursesTable({ data, color }: CardTableProps) {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
+
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
+
   });
 
+
+
   useEffect(() => {
-    if (table.getState().columnFilters[0]?.id === "fullName") {
-      if (table.getState().sorting[0]?.id !== "fullName") {
-        table.setSorting([{ id: "fullName", desc: false }]);
+    if (table.getState().columnFilters[0]?.id === "course_title") {
+      if (table.getState().sorting[0]?.id !== "course_title") {
+        table.setSorting([{ id: "course_title", desc: false }]);
       }
     }
   }, [table.getState().columnFilters[0]?.id]);
+
+  useEffect(() => {
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+    const courseIds = selectedRows.map(course => course.original.course_id);
+    setSelectedStudents(courseIds)
+  }, [table.getFilteredSelectedRowModel().rows]);
 
   return (
     <>
       <div
         className={
-          "relative mb-6  flex w-full min-w-0 flex-col break-words rounded  bg-white shadow-lg" +
+          "relative mb-6  flex w-full min-w-0 flex-col break-words rounded  bg-white shadow-lg px-3" +
           (color === "light" ? "bg-white" : "bg-blueGray-700 text-white")
         }
       >
         <div className="px-4 py-3 mb-0 border-0 rounded-t">
           <div className="flex flex-wrap items-center">
             <div className="relative flex-1 flex-grow w-full max-w-full px-4">
-              <h3
+              <h5
                 className={
-                  "text-lg font-semibold" +
+                  "text-md font-semibold" +
                   (color === "light" ? "text-blueGray-700" : "text-white")
                 }
               >
-                Courses
-              </h3>
+                Select students to enroll in this course
+              </h5>
             </div>
             <SearchBar
               value={ globalFilter ?? "" }
@@ -262,22 +299,17 @@ export default function CoursesTable({ data, color }: CardTableProps) {
                 return (
                   <tr
                     key={ row.id }
-                    onClick={ () =>
-                      router.push(
-                        `/dashboard/courses/${row.getValue("course_id")}`
-                      )
-                    }
                     className={ "cursor-pointer hover:bg-sky-100" }
                   >
                     { row.getVisibleCells().map((cell) => {
                       return (
                         <>
-                          { cell.column.id === "course_title" ? (
+                          { cell.column.id === "fullName" ? (
                             <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
                               <Image
                                 src={ `${cell.row.getValue(
-                                  "course_avatar_url"
-                                )}` }
+                                  "student_avatar_url"
+                                )}/?size=100x100` }
                                 alt={ "avatar Img" }
                                 height={ 60 }
                                 width={ 60 }
@@ -291,16 +323,16 @@ export default function CoursesTable({ data, color }: CardTableProps) {
                                     : "text-white")
                                 }
                               >
-                                { cell.row.getValue("course_title") }
+                                { cell.row.getValue("fullName") }
                               </span>
                             </th>
-                          ) : cell.column.id === "course_status" ? (
+                          ) : cell.column.id === "status" ? (
                             <td
                               className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
                               key={ cell.id }
                             >
                               { " " }
-                              <StatusPillCourses value={ cell.row.getValue("course_status") } />
+                              <StatusPill value={ cell.row.getValue("status") } />
                             </td>
                           ) : (
                             <td
@@ -320,6 +352,7 @@ export default function CoursesTable({ data, color }: CardTableProps) {
                 );
               }) }
             </tbody>
+
           </table>
 
           {/*   pagination */ }
@@ -369,7 +402,7 @@ export default function CoursesTable({ data, color }: CardTableProps) {
                       table.setPageSize(Number(e.target.value));
                     } }
                   >
-                    { [10, 20, 30].map((pageSize) => (
+                    { [5, 10, 15].map((pageSize) => (
                       <option key={ pageSize } value={ pageSize }>
                         { pageSize }
                       </option>
@@ -430,87 +463,10 @@ export default function CoursesTable({ data, color }: CardTableProps) {
               </div>
             </div>
           </div>
-
-          {/*   <div>{table.getPrePaginationRowModel().rows.length} Rows</div> */ }
-        </div>
-      </div>
-
-      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */ }
+        </div >
+      </div >
     </>
   );
 }
 
-function Filter({
-  column,
-  table,
-}: {
-  column: Column<any, unknown>;
-  table: Table<any>;
-}) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id);
 
-  const columnFilterValue = column.getFilterValue();
-
-  const sortedUniqueValues = useMemo(
-    () =>
-      typeof firstValue === "number"
-        ? []
-        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-    [column.getFacetedUniqueValues()]
-  );
-
-  return typeof firstValue === "number" ? (
-    <div>
-      <div className="flex space-x-2">
-        <SearchBar
-          type="number"
-          min={ Number(column.getFacetedMinMaxValues()?.[0] ?? "") }
-          max={ Number(column.getFacetedMinMaxValues()?.[1] ?? "") }
-          value={ (columnFilterValue as [number, number])?.[0] ?? "" }
-          onChange={ (value) =>
-            column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-          }
-          placeholder={ `Min ${column.getFacetedMinMaxValues()?.[0]
-            ? `(${column.getFacetedMinMaxValues()?.[0]})`
-            : ""
-            }` }
-          className="w-24 border rounded shadow"
-        />
-        <SearchBar
-          type="number"
-          min={ Number(column.getFacetedMinMaxValues()?.[0] ?? "") }
-          max={ Number(column.getFacetedMinMaxValues()?.[1] ?? "") }
-          value={ (columnFilterValue as [number, number])?.[1] ?? "" }
-          onChange={ (value) =>
-            column.setFilterValue((old: [number, number]) => [old?.[0], value])
-          }
-          placeholder={ `Max ${column.getFacetedMinMaxValues()?.[1]
-            ? `(${column.getFacetedMinMaxValues()?.[1]})`
-            : ""
-            }` }
-          className="w-24 border rounded shadow"
-        />
-      </div>
-      <div className="h-1" />
-    </div>
-  ) : (
-    <>
-      <datalist id={ column.id + "list" }>
-        { sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={ value } key={ value } />
-        )) }
-      </datalist>
-      <SearchBar
-        type="text"
-        value={ (columnFilterValue ?? "") as string }
-        onChange={ (value) => column.setFilterValue(value) }
-        placeholder={ `Search... (${column.getFacetedUniqueValues().size})` }
-        className="border rounded shadow w-36"
-        list={ column.id + "list" }
-      />
-      <div className="h-1" />
-    </>
-  );
-}

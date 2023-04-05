@@ -1,5 +1,12 @@
 "use client"
 
+
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useMemo } from "react";
+import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
+import Image from "next/image";
+import { enrollment_grade_details } from "@/lib/types";
+
 import {
   Column,
   Table,
@@ -17,27 +24,18 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
-
-import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 
 import {
-  SortIcon,
+
   SortUpIcon,
   SortDownIcon,
-} from "@/components/dashboard/common/shared/Icons";
-
-import type { Database } from "@/lib/database.types";
-
-import Image from "next/image";
+} from "@/components/dashboard/common/Icons";
 
 
 
-type Students_Courses =  Database["public"]["Views"]["student_enrollment_grade_info"]["Row"];
 interface CardTableProps {
   color: "light" | "dark";
-  data: Students_Courses[];
+  data: enrollment_grade_details[];
 }
 
 declare module "@tanstack/table-core" {
@@ -67,7 +65,7 @@ export default function CardStudentCourses({ data, color }: CardTableProps) {
   const [globalFilter, setGlobalFilter] = useState("");
   const router = useRouter();
 
-  const columns = useMemo<ColumnDef<Students_Courses, any>[]>(
+  const columns = useMemo<ColumnDef<enrollment_grade_details, any>[]>(
     () => [
       {
         accessorKey: "course_id",
@@ -109,7 +107,7 @@ export default function CardStudentCourses({ data, color }: CardTableProps) {
       globalFilter,
     },
     initialState: {
-       columnVisibility: { course_id: false, course_avatar_url: false },
+      columnVisibility: { course_id: false, course_avatar_url: false },
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
@@ -146,19 +144,19 @@ export default function CardStudentCourses({ data, color }: CardTableProps) {
           <div className="flex flex-wrap items-center">
             <div className="relative flex-1 flex-grow w-full max-w-full">
               <div className="flex items-center pl-4 space-x-4 font-semibold leading-8 text-gray-900">
-        <i className={"fas fa-university text-emerald-600"}></i>
-        <span>Courses</span>
-      </div>
+                <i className={ "fas fa-university text-emerald-600" }></i>
+                <span>Courses</span>
+              </div>
             </div>
-         </div>
+          </div>
         </div>
 
         <div className="block w-full overflow-x-auto">
           <table className="items-center w-full bg-transparent border-collapse">
             <thead className="bg-gray-50">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
+              { table.getHeaderGroups().map((headerGroup) => (
+                <tr key={ headerGroup.id }>
+                  { headerGroup.headers.map((header) => {
                     return (
                       <>
                         <th
@@ -169,25 +167,25 @@ export default function CardStudentCourses({ data, color }: CardTableProps) {
                               ? "border-blueGray-100 bg-blueGray-50 text-blueGray-500"
                               : "border-blueGray-500 bg-blueGray-600 text-blueGray-200")
                           }
-                          key={header.id}
+                          key={ header.id }
                         >
-                          {header.isPlaceholder ? null : (
+                          { header.isPlaceholder ? null : (
                             <>
                               <div
-                                {...{
+                                { ...{
                                   className: header.column.getCanSort()
                                     ? "cursor-pointer select-none"
                                     : "",
                                   onClick:
                                     header.column.getToggleSortingHandler(),
-                                }}
+                                } }
                                 className="flex items-center justify-between"
                               >
-                                {flexRender(
+                                { flexRender(
                                   header.column.columnDef.header,
                                   header.getContext()
-                                )}
-                                {{
+                                ) }
+                                { {
                                   asc: (
                                     <SortUpIcon className="w-4 h-4 text-gray-400" />
                                   ),
@@ -195,7 +193,7 @@ export default function CardStudentCourses({ data, color }: CardTableProps) {
                                     <SortDownIcon className="w-4 h-4 text-gray-400" />
                                   ),
                                 }[header.column.getIsSorted() as string] ??
-                                  null}
+                                  null }
                               </div>
                               {/*  {header.column.getCanFilter() ? (
                                 <div>
@@ -206,95 +204,95 @@ export default function CardStudentCourses({ data, color }: CardTableProps) {
                                 </div>
                               ) : null} */}
                             </>
-                          )}
+                          ) }
                         </th>
                       </>
                     );
-                  })}
+                  }) }
                 </tr>
-              ))}
+              )) }
             </thead>
 
             <tbody>
-              {table.getRowModel().rows.map((row) => {
+              { table.getRowModel().rows.map((row) => {
                 return (
                   <tr
-                    key={row.id}
-                    onClick={() =>
+                    key={ row.id }
+                    onClick={ () =>
                       router.push(
                         `/dashboard/courses/${row.getValue("course_id")}`
                       )
                     }
-                    className={"cursor-pointer hover:bg-sky-100"}
+                    className={ "cursor-pointer hover:bg-sky-100" }
                   >
-                    {row.getVisibleCells().map((cell) => {
+                    { row.getVisibleCells().map((cell) => {
                       return (
-                       <>
-                            {cell.column.id === "course_title" ? (
-                              <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
-                                <Image
-                                  src={`${cell.row.getValue(
-                                    "course_avatar_url"
-                                  )}`}
-                                  alt={"avatar Img"}
-                                  height={60}
-                                  width={60}
-                                  className="w-12 h-12 bg-white border rounded-full"
-                                ></Image>
-                                <span
-                                  className={
-                                    "ml-3 font-bold " +
-                                    +(color === "light"
-                                      ? "text-blueGray-600"
-                                      : "text-white")
-                                  }
-                                >
-                                  {cell.row.getValue("course_title")}
+                        <>
+                          { cell.column.id === "course_title" ? (
+                            <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
+                              <Image
+                                src={ `${cell.row.getValue(
+                                  "course_avatar_url"
+                                )}` }
+                                alt={ "avatar Img" }
+                                height={ 60 }
+                                width={ 60 }
+                                className="w-12 h-12 bg-white border rounded-full"
+                              ></Image>
+                              <span
+                                className={
+                                  "ml-3 font-bold " +
+                                  +(color === "light"
+                                    ? "text-blueGray-600"
+                                    : "text-white")
+                                }
+                              >
+                                { cell.row.getValue("course_title") }
+                              </span>
+                            </th>
+                          ) : cell.column.id === "progress" ? (
+                            <td className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <span className="mr-2">
+                                  { cell.row.getValue("progress") }
                                 </span>
-                              </th>
-                            ) : cell.column.id === "progress" ? (
-                              <td className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <span className="mr-2">
-                                    {cell.row.getValue("progress")}
-                                  </span>
-                                  <div className="relative w-full">
-                                    <div className="flex h-2 overflow-hidden text-xs bg-green-200 rounded">
-                                      <div
-                                        style={{ width: `${cell.row.getValue("progress")}%` }}
-                                        className="flex flex-col justify-center text-center text-white bg-green-500 shadow-none whitespace-nowrap"
-                                      ></div>
-                                    </div>
+                                <div className="relative w-full">
+                                  <div className="flex h-2 overflow-hidden text-xs bg-green-200 rounded">
+                                    <div
+                                      style={ { width: `${cell.row.getValue("progress")}%` } }
+                                      className="flex flex-col justify-center text-center text-white bg-green-500 shadow-none whitespace-nowrap"
+                                    ></div>
                                   </div>
                                 </div>
-                              </td>
-                            ) : (
-                              <td
-                                className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
-                                key={cell.id}
-                              >
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext()
-                                )}
-                              </td>
-                            )}
-                          </>
+                              </div>
+                            </td>
+                          ) : (
+                            <td
+                              className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
+                              key={ cell.id }
+                            >
+                              { flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              ) }
+                            </td>
+                          ) }
+                        </>
                       );
-                    })}
+                    }) }
                   </tr>
                 );
-              })}
+              }) }
             </tbody>
           </table>
 
-       
 
-          {/*   <div>{table.getPrePaginationRowModel().rows.length} Rows</div> */}
+
+          {/*   <div>{table.getPrePaginationRowModel().rows.length} Rows</div> */ }
         </div>
       </div>
 
-      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */ }
     </>
   );
 }

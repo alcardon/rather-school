@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import CardStudentCourses from "@/components/dashboard/students/student/CardStudentCourses";
 
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export default async function Page({
   params: { student },
@@ -45,12 +45,11 @@ export default async function Page({
   const SiblingData = (await Promise.all(sibling_data_promises)).flat();
 
   const { data } = await supabase
-    .from("student_enrollment_grade_info")
+    .from("enrollment_grade_details")
     .select("*")
     .eq("student_id", student);
 
-  /*  console.log(student_courses);
-   */
+
   if (!data) {
     notFound();
   }
@@ -60,24 +59,25 @@ export default async function Page({
       <div className="flex flex-wrap mb-36">
         <div className="flex-col flex-wrap w-full px-3 mt-4 xl:w-4/12">
           <div className="w-full">
-            {" "}
-            <CardProfileImage studentData={student_data || []} />
+            { " " }
+
+            <CardProfileImage studentData={ student_data || [] } />
           </div>
           <div className="w-full pt-6 ">
-            <CardSiblings siblingsData={SiblingData || []} />
+            <CardSiblings siblingsData={ SiblingData || [] } />
           </div>
         </div>
         <div className="flex-col flex-wrap w-full px-3 mt-4 break-words xl:mb-0 xl:w-8/12">
           <div className="w-full">
-            {" "}
-            <CardUserInfo studentData={student_data || []} />
+            { " " }
+            <CardUserInfo studentData={ student_data || [] } />
           </div>
 
           <div className="w-full pt-6">
-          
-           <CardStudentCourses color="light" data={data || []} /> 
+
+            <CardStudentCourses color="light" data={ data || [] } />
           </div>
-         
+
         </div>
       </div>
     </>

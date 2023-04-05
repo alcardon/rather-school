@@ -13,19 +13,21 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (pathname == "/") {
-    if (session) {
-      const url = new URL(req.url);
-      url.pathname = "/dashboard";
-      return NextResponse.redirect(url);
-    } else {
+  if (session && pathname === "/") {
+    const url = new URL(req.url);
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  return res;
+
+  /*  if (pathname == "/" || pathname.startsWith("/dashboard")) {
+    if (session?.user == undefined) {
       const url = new URL(req.url);
       url.pathname = "/login";
       return NextResponse.redirect(url);
     }
-  }
-
-  return res;
+  } */
 
   /*  if (!session && pathname != "/register") {
     const url = new URL(req.url);

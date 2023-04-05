@@ -29,13 +29,13 @@ import {
   SortIcon,
   SortUpIcon,
   SortDownIcon,
-} from "@/components/dashboard/common/shared/Icons";
+} from "@/components/dashboard/common/Icons";
 
 
 import {
   Button,
   PageButton,
-} from "@/components/dashboard/common/shared/Button";
+} from "@/components/dashboard/common/Button";
 
 
 import {

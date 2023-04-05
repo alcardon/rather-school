@@ -13,5 +13,5 @@ export default async function Realtime() {
   // data can be passed from server components to client components
   // this allows us to fetch the initial Students before rendering the page
   // our <RealtimeStudents /> component will then subscribe to new Students client-side
-  return <RealtimeStudents serverStudents={data || []} />;
+  return <RealtimeStudents serverStudents={ data || [] } />;
 }

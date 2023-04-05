@@ -1,5 +1,4 @@
-/* "use client";
- */
+
 import "./globals.css";
 import { createClient } from "@/lib/supabase-browser";
 import type { Database } from "@/lib/database.types";
@@ -10,7 +9,7 @@ import SupabaseProvider from "@/components/common/supabase-provider";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "styles/tailwind.css";
-import ThemeProviders from "@/components/common/themeproviders";
+import MuiThemeProvider from "@/components/common/muiThemeProviders";
 
 // do not cache this layout
 export const revalidate = 0;
@@ -36,12 +35,12 @@ export default async function RootLayout({
       </head>
 
       <body>
-        <ThemeProviders >
+        <MuiThemeProvider >
           <SupabaseProvider>
             <SupabaseListener serverAccessToken={ session?.access_token } />
             { children }
           </SupabaseProvider>
-        </ThemeProviders>
+        </MuiThemeProvider>
       </body>
 
     </html>
