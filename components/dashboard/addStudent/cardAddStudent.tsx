@@ -81,7 +81,7 @@ export default function CardAddStudent({ serverCourses,
       current_residence_country, phone_number, prefered_coms_chanel,
       learning_goals }) => {
 
-      updateProfile({
+      createStudent({
         first_name, last_name, occupation, gender,
         preferred_lang, email_address, home_address,
         current_residence_country, phone_number,
@@ -91,7 +91,7 @@ export default function CardAddStudent({ serverCourses,
     },
   });
 
-  async function updateProfile({
+  async function createStudent({
     first_name, last_name, occupation, gender, preferred_lang,
     email_address, home_address, current_residence_country,
     phone_number, prefered_coms_chanel, learning_goals,
