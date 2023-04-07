@@ -1,5 +1,7 @@
+"use client"
 import { parse, format } from "date-fns";
 import { Students } from "@/lib/types";
+import { useEffect, useState } from "react";
 
 
 export default function CardUserInfo({
@@ -7,11 +9,23 @@ export default function CardUserInfo({
 }: {
   studentData: Students[];
 }) {
-  let birthday: string = format(
-    //@ts-ignore
-    parse(studentData[0]?.date_of_birth, "yyyy-mm-dd", new Date()),
-    "MMM dd, yyyy"
-  );
+  useState
+  const [data, setData] = useState(studentData)
+
+
+  const formatBirthday = (date) => {
+    return format(
+      //@ts-ignore
+      parse(date, "yyyy-mm-dd", new Date()),
+      "MMM dd, yyyy"
+    );
+  }
+  useEffect(() => {
+    setData(studentData)
+
+
+  }, [studentData])
+
 
   return (
     <div className="relative p-3 bg-white rounded shadow">
@@ -23,45 +37,45 @@ export default function CardUserInfo({
         <div className="grid text-sm md:grid-cols-2">
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">First Name</div>
-            <div className="px-4 py-2">{ studentData[0]?.first_name }</div>
+            <div className="px-4 py-2">{ data[0]?.first_name }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Last Name</div>
-            <div className="px-4 py-2">{ studentData[0]?.last_name }</div>
+            <div className="px-4 py-2">{ data[0]?.last_name }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Gender</div>
-            <div className="px-4 py-2">{ studentData[0]?.gender }</div>
+            <div className="px-4 py-2">{ data[0]?.gender }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Contact No.</div>
-            <div className="px-4 py-2">{ studentData[0]?.phone_number }</div>
+            <div className="px-4 py-2">{ data[0]?.phone_number }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Address</div>
-            <div className="px-4 py-2">{ studentData[0]?.home_address }</div>
+            <div className="px-4 py-2">{ data[0]?.home_address }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Country</div>
             <div className="px-4 py-2">
-              { studentData[0]?.current_residence_country }
+              { data[0]?.current_residence_country }
             </div>
           </div>
 
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Preferred Language</div>
-            <div className="px-4 py-2">{ studentData[0]?.preferred_lang }</div>
+            <div className="px-4 py-2">{ data[0]?.preferred_lang }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Learning goals</div>
-            <div className="px-4 py-2">{ studentData[0]?.learning_goals }</div>
+            <div className="px-4 py-2">{ data[0]?.learning_goals }</div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">
               Preferred comunications channel
             </div>
             <div className="px-4 py-2">
-              { studentData[0]?.prefered_coms_chanel }
+              { data[0]?.prefered_coms_chanel }
             </div>
           </div>
           <div className="grid grid-cols-2">
@@ -69,15 +83,15 @@ export default function CardUserInfo({
             <div className="px-4 py-2">
               <a
                 className="text-blue-800"
-                href={ `mailto:${studentData[0]?.email_address}` }
+                href={ `mailto:${data[0]?.email_address}` }
               >
-                { studentData[0]?.email_address }
+                { data[0]?.email_address }
               </a>
             </div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-4 py-2 font-semibold">Birthday</div>
-            <div className="px-4 py-2">{ birthday || "" }</div>
+            <div className="px-4 py-2">{ formatBirthday(data[0].date_of_birth) || "" }</div>
           </div>
         </div>
       </div>

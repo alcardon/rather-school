@@ -39,6 +39,39 @@ export default function RealtimeStudents({
     };
   }, [supabase, setStudents, students]);
 
+  useEffect(() => {
+    // ensure you have enabled replication on the `students` table
+
+    const channel = supabase
+      .channel("*")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "students" },
+        (payload) => setStudents([...students, payload.new as Students])
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, setStudents, students]);
+  useEffect(() => {
+    // ensure you have enabled replication on the `students` table
+
+    const channel = supabase
+      .channel("*")
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "students" },
+        (payload) => setStudents([...students, payload.new as Students])
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, setStudents, students]);
+
   return (
     <>
       <div className="mt-4 flex flex-wrap">

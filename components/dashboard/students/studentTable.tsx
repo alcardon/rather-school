@@ -1,11 +1,10 @@
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useReducer } from "react";
 import Image from "next/image";
 import SearchBar from "@/components/dashboard/common/SearchBar";
 import StatusPill from "@/components/dashboard/students/statusPill";
 import { Students } from "@/lib/types";
 import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
-
 
 import {
   Column,
@@ -44,6 +43,10 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/solid";
+import { IconButton, Tooltip } from "@mui/material";
+import { Stack } from "@mui/system";
+import { notify } from "@/components/common/notify";
+import { useSupabase } from "@/components/common/supabase-provider";
 
 
 interface CardTableProps {
@@ -76,7 +79,14 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 export default function StudentTable({ data, color }: CardTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [refetcher, setRefetcher] = useState<any>("")
   const router = useRouter();
+  const { supabase } = useSupabase()
+
+  useEffect(() => {
+    setRefetcher("")
+  }, [data])
+
 
   const columns = useMemo<ColumnDef<Students, any>[]>(
     () => [
@@ -125,9 +135,51 @@ export default function StudentTable({ data, color }: CardTableProps) {
         header: "Status",
         footer: (props) => props.column.id,
       },
+      {
+        id: 'edit_delete',
+        header: ({ table }) => "",
+        cell: ({ row }) => (
+          <Stack direction="row" alignItems="center" spacing={ 2 }>
+            <Tooltip title="Details"
+            ><IconButton color="primary" aria-label="See" component="label" size="small" onClick={ () => {
+              router.push(
+                `/dashboard/students/${row.getValue("student_id")}`
+              )
+            } }>
+                <i className={ "fas fa-search-plus" }></i>
+              </IconButton></Tooltip>
+            <Tooltip title="Edit"
+            ><IconButton color="info" aria-label="edit" component="label" size="small">
+                <i className={ "fas fa-edit" }></i>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete"
+            ><IconButton color="error" aria-label="delete" component="label" size="small" onClick={ () => {
+              deleteStudent(row.getValue("student_id"))
+            } }>
+                <i className={ "fas fa-trash" }></i>
+              </IconButton>
+            </Tooltip>
+
+          </Stack>
+        ),
+      },
     ],
     []
   );
+
+  async function deleteStudent(student_id: Students["student_id"]) {
+    try {
+      let { data, error } = await supabase.from('students').delete().match({ "student_id": student_id })
+      // @ts-ignore
+
+      notify("success", "Student deleted")
+    } catch (error) {
+      notify("error", "Error deleting Student")
+    }
+
+
+  }
 
   /*   const [data, setData] = useState<Person[]>(() => makeData(50000));
   const refreshData = () => setData((old) => makeData(50000)); */
@@ -264,11 +316,7 @@ export default function StudentTable({ data, color }: CardTableProps) {
                 return (
                   <tr
                     key={ row.id }
-                    onClick={ () =>
-                      router.push(
-                        `/dashboard/students/${row.getValue("student_id")}`
-                      )
-                    }
+
                     className={ "cursor-pointer hover:bg-sky-100" }
                   >
                     { row.getVisibleCells().map((cell) => {
@@ -276,15 +324,17 @@ export default function StudentTable({ data, color }: CardTableProps) {
                         <>
                           { cell.column.id === "fullName" ? (
                             <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
-                              <Image
+                              {/* <Image
                                 src={ `${cell.row.getValue(
                                   "student_avatar_url"
-                                )}/?size=100x100` }
+                                )}/?size=100x100` ? `${cell.row.getValue(
+                                  "student_avatar_url"
+                                )}/?size=100x100` : "robohash.org/default/?size=100x100" }
                                 alt={ "avatar Img" }
                                 height={ 60 }
                                 width={ 60 }
                                 className="w-12 h-12 bg-white border rounded-full"
-                              ></Image>
+                              ></Image> */}
                               <span
                                 className={
                                   "ml-3 font-bold " +
