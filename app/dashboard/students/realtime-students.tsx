@@ -22,14 +22,16 @@ export default function RealtimeStudents({
     setStudents(serverStudents);
   }, [serverStudents]);
 
+
+
   useEffect(() => {
     // ensure you have enabled replication on the `students` table
 
     const channel = supabase
-      .channel("*")
+      .channel("students")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "students" },
+        { event: "*", schema: "public", table: "students" },
         (payload) => setStudents([...students, payload.new as Students])
       )
       .subscribe();
@@ -39,44 +41,12 @@ export default function RealtimeStudents({
     };
   }, [supabase, setStudents, students]);
 
-  useEffect(() => {
-    // ensure you have enabled replication on the `students` table
-
-    const channel = supabase
-      .channel("*")
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "students" },
-        (payload) => setStudents([...students, payload.new as Students])
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase, setStudents, students]);
-  useEffect(() => {
-    // ensure you have enabled replication on the `students` table
-
-    const channel = supabase
-      .channel("*")
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table: "students" },
-        (payload) => setStudents([...students, payload.new as Students])
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase, setStudents, students]);
 
   return (
     <>
-      <div className="mt-4 flex flex-wrap">
-        <div className="mb-12 w-full px-4">
-          <StudentTable color="light" data={ students } />
+      <div className="flex flex-wrap mt-4">
+        <div className="w-full px-4 mb-12">
+          <StudentTable color="light" key={ students } data={ students } />
         </div>
       </div>
     </>
