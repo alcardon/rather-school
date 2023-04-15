@@ -103,7 +103,28 @@ export default function StudentTable({ data, color }: CardTableProps) {
         footer: (props) => props.column.id,
       },
       {
-        accessorFn: (row) => ` ${row.first_name} ${row.last_name}`,
+        accessorFn: (row) => (
+          <td
+            className="text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
+            key={ row.student_id }
+          >
+            <th className="flex items-center text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
+              {/* <Image
+                src={ `${row.student_avatar_url}/?size=100x100` ? `${row.student_avatar_url}/?size=100x100` : "robohash.org/default/?size=100x100" }
+                alt={ "avatar Img" }
+                height={ 60 }
+                width={ 60 }
+                className="w-12 h-12 bg-white border rounded-full"
+              ></Image> */}
+              <span
+                className={
+                  "ml-3 font-bold text-blueGray-600"
+                }
+              >
+                { ` ${row.first_name} ${row.last_name}` }
+              </span>
+            </th>
+          </td >),
         id: "fullName",
         header: "Full Name",
         cell: (info) => info.getValue(),
@@ -134,6 +155,14 @@ export default function StudentTable({ data, color }: CardTableProps) {
         accessorKey: "status",
         header: "Status",
         footer: (props) => props.column.id,
+        cell: ({ row, cell }) => (
+          <td
+            className="text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
+            key={ cell.id }
+          >
+            { " " }
+            <StatusPill value={ row.getValue("status") } />
+          </td>)
       },
       {
         id: 'edit_delete',
@@ -322,49 +351,16 @@ export default function StudentTable({ data, color }: CardTableProps) {
                     { row.getVisibleCells().map((cell) => {
                       return (
                         <>
-                          { cell.column.id === "fullName" ? (
-                            <th className="flex items-center p-4 px-6 text-xs text-left align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap">
-                              {/* <Image
-                                src={ `${cell.row.getValue(
-                                  "student_avatar_url"
-                                )}/?size=100x100` ? `${cell.row.getValue(
-                                  "student_avatar_url"
-                                )}/?size=100x100` : "robohash.org/default/?size=100x100" }
-                                alt={ "avatar Img" }
-                                height={ 60 }
-                                width={ 60 }
-                                className="w-12 h-12 bg-white border rounded-full"
-                              ></Image> */}
-                              <span
-                                className={
-                                  "ml-3 font-bold " +
-                                  +(color === "light"
-                                    ? "text-blueGray-600"
-                                    : "text-white")
-                                }
-                              >
-                                { cell.row.getValue("fullName") }
-                              </span>
-                            </th>
-                          ) : cell.column.id === "status" ? (
-                            <td
-                              className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
-                              key={ cell.id }
-                            >
-                              { " " }
-                              <StatusPill value={ cell.row.getValue("status") } />
-                            </td>
-                          ) : (
-                            <td
-                              className="p-6 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
-                              key={ cell.id }
-                            >
-                              { flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              ) }
-                            </td>
-                          ) }
+                          <td
+                            className="p-4 px-6 text-xs align-middle border-t-0 border-l-0 border-r-0 whitespace-nowrap"
+                            key={ cell.id }
+                          >
+                            { flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            ) }
+                          </td>
+
                         </>
                       );
                     }) }
