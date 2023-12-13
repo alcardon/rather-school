@@ -14,10 +14,12 @@ export default function Page() {
 
   const { supabase } = useSupabase();
   const router = useRouter();
+  
   const handleGitHubLogin = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "github",
     });
+    router.refresh()
   };
 
   async function signIn(email: string, password: string) {
